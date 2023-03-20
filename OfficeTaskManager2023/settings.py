@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     # custom apps
     'taskManager',
     'users',
+    'member',
 ]
  
 JAZZMIN_SETTINGS = {
