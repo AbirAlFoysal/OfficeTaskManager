@@ -14,6 +14,27 @@ from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
 # from verify_email.email_handler import send_verification_email
 
 
+# def register(request):
+#     if request.method == 'POST':
+#         dispatch()
+#         form = RegisterForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('login')
+#     else:
+#         form = RegisterForm()
+
+#     def dispatch(self, request, *args, **kwargs):
+#         # will redirect to the home page if a user tries to access the register page while logged in
+#         if request.user.is_authenticated:
+#             return redirect(to='/')
+#         return super(register(), self).dispatch(request, *args, **kwargs)
+
+    
+#     return render(request, 'users/register.html', {'form': form})
+
+
+
 class RegisterView(View):
     form_class = RegisterForm
     initial = {'key': 'value'}
@@ -48,7 +69,7 @@ class RegisterView(View):
 # Class based view that extends from the built in login view to add a remember me functionality
 class CustomLoginView(LoginView):
     form_class = LoginForm
-    success_message = "Welcome!"
+    success_message = "Welcome to ParkingBD!"
     def form_valid(self, form):
         
         remember_me = form.cleaned_data.get('remember_me')
@@ -64,6 +85,26 @@ class CustomLoginView(LoginView):
 
         # else browser session will be as long as the session cookie time "SESSION_COOKIE_AGE" defined in settings.py
         return super(CustomLoginView, self).form_valid(form)
+
+
+
+# def loginView(request):
+#     if request.method == 'POST':
+#         username = request.POST['username']
+#         password = request.POST['password']
+#         user = authenticate(request, username=username, password=password)
+#         if user is not None:
+#             login(request, user)
+#             messages.success(request, 'Welcome to ParkingBD!')
+#             return redirect('home')
+#         else:
+#             messages.error(request, 'Invalid username or password')
+#             return render(request, 'users/login.html', {'error': 'Invalid username or password'})
+#     else:
+#         return render(request, 'users/login.html')
+
+
+
 
 
 

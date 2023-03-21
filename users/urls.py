@@ -10,7 +10,7 @@ urlpatterns = [
 #     path('', home, name='users-home'),
     path('', include('social_django.urls', namespace='social')),
     
-    path('register/', RegisterView.as_view(), name='users-register'),
+    path('register/', RegisterView.as_view(), name='register'),
 
     path('login/', CustomLoginView.as_view(redirect_authenticated_user=True, template_name='users/login.html',
                                            authentication_form=LoginForm), name='login'),

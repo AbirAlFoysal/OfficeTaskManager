@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     # custom apps
     'taskManager',
     'users',
-    'member',
 ]
- 
+
+# AUTH_USER_MODEL = 'member.CustomUser'
+
+
 JAZZMIN_SETTINGS = {
     "site_title": "ParkingBD Admin",
     "site_header": "ParkingBD",
