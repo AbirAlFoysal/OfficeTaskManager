@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 # User = settings.AUTH_USER_MODEL
 
 
-
 # Create your models here.
 
 class Project(models.Model):
@@ -18,18 +17,19 @@ class Project(models.Model):
     transparent = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Task(models.Model):
-    supervisor = models.ForeignKey(User, on_delete=models.CASCADE)
+    related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     deadline = models.DateTimeField()
-    commentOnCompletion = models.TextField()
+    commentOnCompletion = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
@@ -41,13 +41,21 @@ class Subtask(models.Model):
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
-    description = models.TextField()
+    description = models.TextField(blank=True)
     dateline = models.DateTimeField()
-    commentOnCompletion = models.TextField()
+    commentOnCompletion = models.TextField(blank=True)
 
     def __str__(self):
         return self.title
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
+    body = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return self.sender
 
 class Comment(models.Model):
     critic = models.ForeignKey(User, on_delete=models.CASCADE)

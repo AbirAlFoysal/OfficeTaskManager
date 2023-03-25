@@ -3,4 +3,15 @@
 Home
 {% endblock title %}
 {% block base %}
+<div class='container'>
+<div class="jumbotron">
+    <h1 class="display-4">Hello, {{user.username}}!</h1>
+    <p class="lead">Welcomeback.</p>
+    <hr class="my-4">
+    <p>Are you ready to complete your tasks today? Take a look at your Projects...</p>
+    <p class="lead">
+      <a class="btn btn-success" href="{% url 'projects' %}" role="button"> Projects</a>
+    </p>
+  </div>
+</div>
 {% endblock base %} 

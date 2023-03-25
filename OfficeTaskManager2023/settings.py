@@ -26,18 +26,17 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # 3rd party apps
+    'jazzmin',
+    'livereload',
+    # 'social_django',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    # 3rd party apps
-    'jazzmin',
-    'livereload',
-    # 'social_django',
-
 
     # custom apps
     'taskManager',
@@ -48,9 +47,9 @@ INSTALLED_APPS = [
 
 
 JAZZMIN_SETTINGS = {
-    "site_title": "ParkingBD Admin",
-    "site_header": "ParkingBD",
-    "site_brand": "ParkingBD",
+    "site_title": "TaskManager Admin",
+    "site_header": "TaskManager",
+    "site_brand": "TaskManager",
     "site_logo": None,
     "login_logo": None,
 }

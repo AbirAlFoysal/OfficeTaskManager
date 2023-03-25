@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+My Projects
+{% endblock title %}
+{% block base %}
+
+<div class='container'>
+<h1 class="container">My Projects</h1>
+
+<div class="list-group">
+    {% for project in projects %}
+    <button type="button" class="list-group-item list-group-item-action"><a href="{% url 'projectDetail' project.id %}">{{ project.name }}</a></button>
+    {% endfor %}
+    {% if not projects %}
+    <button type="button" class="list-group-item list-group-item-action"><a href="#">No Projects available</a></button>
+    {% endif %}
+  </div>
+
+
+
+</div>
+
+{% endblock base %} 
