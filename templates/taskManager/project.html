@@ -179,27 +179,26 @@
 
     <div class="overflow-auto" style="max-height: 350px;" id="small-screen-container">
       <!-- Small screen content goes here -->
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos praesentium officiis molestias, nemo amet et
-      earum voluptate vitae quo quaerat consequuntur cum harum optio pariatur commodi, necessitatibus at adipisci
-      distinctio, doloremque quia asperiores iure nostrum soluta fugiat. Dignissimos, nostrum nobis error eum voluptatem
-      est sed? Dolor illum, corporis illo distinctio repellat magni accusamus dolorem perferendis assumenda? Facere
-      eaque suscipit itaque culpa dolore ab libero? Veniam quo earum rerum explicabo dolore quos, eligendi, illum ut,
-      fuga molestias magni dolores porro. Rem veniam id, deserunt eum esse quas dolore. Nihil voluptate hic cum animi
-      exercitationem rem quam accusantium, error quasi minus dignissimos nulla tenetur sunt quidem consequatur. Natus ab
-      tempora odit alias, sint quae fugit iusto reprehenderit doloremque quia ea dolore quod, omnis eaque nesciunt,
-      totam perspiciatis? Aliquam soluta sed quo consequuntur, sunt eveniet animi rem. Illum ad fugiat sapiente fuga
-      libero velit! Sapiente natus magni aliquid inventore modi recusandae nobis ullam, nesciunt quod temporibus
-      impedit, eum pariatur omnis quos incidunt consectetur magnam dignissimos quibusdam quasi rem. Adipisci ab
-      cupiditate consequatur nisi sit facilis enim, quaerat eius dolor maiores eligendi illo aut, perferendis sapiente?
-      A nobis dignissimos veniam eos quam rerum non quos doloremque, commodi illum fugiat soluta aspernatur magnam minus
-      architecto minima fugit quisquam quae perspiciatis odit? Explicabo qui rem doloremque a fuga voluptatum in odit
-      nulla, modi perspiciatis voluptatibus, deserunt quos alias praesentium. Doloribus harum asperiores totam facere
-      expedita placeat ullam nobis commodi maxime molestiae. Est, asperiores dignissimos? Aliquid nesciunt illo quae
-      quia repellendus commodi iste fuga maiores incidunt laborum!
+      
+      {% for msg in msg %}
+        <div class="card">
+          <div class="card-header"><strong>{{msg.sender}}</strong>
+          <small>{{msg.created}}</small> 
+          </div>
+          <div class="card-body">
+            <p class="p-2">{{msg.body}}</p>
+          </div>
+        </div>
+      {% endfor %}
     </div>
     <hr>
     <div class="text-right">
-      <a class="btn btn-info btn-sm text-white" href="">Send</a>
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="Text..." aria-label="Recipient's username" aria-describedby="basic-addon2">
+        <span class="input-group-text" id="basic-addon2">
+          <input class="btn btn-dark" type="button" value="Send">
+        </span>
+      </div>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </div>
     <br>

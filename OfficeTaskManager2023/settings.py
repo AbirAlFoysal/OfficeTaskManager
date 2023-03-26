@@ -95,8 +95,10 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
 
+                # custom context processors
+                'taskManager.context_processors.assigned_projects',
+
                 # 3rd party context processors
-                
                 # 'social_django.context_processors.backends', 
                 # 'social_django.context_processors.login_redirect',
             ],

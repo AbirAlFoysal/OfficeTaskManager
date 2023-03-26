@@ -12,15 +12,16 @@ def index(request):
     projects = user.members.all()
     return render(request, 'taskManager/index.html',{'projects': projects})
 
+def testpage(request):
+    return render(request, 'taskManager/testpage.html')
+
 def projectCollection(request):
     user = request.user
     projects = user.members.all()
     return render(request, 'taskManager/projectCollection.html',{'projects': projects})
 
 def projectDetail(request, project_id):
-    user = request.user
-    projects = user.members.all()
-    
+    msg =  Message.objects.all().filter(project = project_id)
     project = Project.objects.get(id=project_id)
     task = Task.objects.all().filter(related_project = project_id).order_by('deadline')
 
@@ -46,5 +47,5 @@ def projectDetail(request, project_id):
     task_completed = Task.objects.all().filter(related_project = project_id, status = 1).count()
     task_remaining = Task.objects.all().filter(related_project = project_id, status = 0).count()
 
-    context = {'project': project, 'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'projects': projects}
+    context = {'project': project, 'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg}
     return render(request, 'taskManager/project.html', context)
