@@ -16,9 +16,9 @@ def testpage(request):
     return render(request, 'taskManager/testpage.html')
 
 def projectCollection(request):
-    user = request.user
-    projects = user.members.all()
-    return render(request, 'taskManager/projectCollection.html',{'projects': projects})
+    ongoing_projects = Project.objects.all().filter(status = 0)
+    finished_projects = Project.objects.all().filter(status = 1)
+    return render(request, 'taskManager/projectCollection.html',{'ongoing_projects': ongoing_projects, 'finished_projects': finished_projects})
 
 def projectDetail(request, project_id):
     msg =  Message.objects.all().filter(project = project_id)

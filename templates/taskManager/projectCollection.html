@@ -4,20 +4,134 @@ My Projects
 {% endblock title %}
 {% block base %}
 
-<div class='container'>
-<h1 class="container">My Projects</h1>
+<center>
+  <h1><strong>Project List</strong></h1>
+</center>
 
-<div class="list-group">
-    {% for project in projects %}
-    <button type="button" class="list-group-item list-group-item-action"><a href="{% url 'projectDetail' project.id %}">{{ project.name }}</a></button>
-    {% endfor %}
-    {% if not projects %}
-    <button type="button" class="list-group-item list-group-item-action"><a href="#">No Projects available</a></button>
-    {% endif %}
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
   </div>
+  <div class="offcanvas-body">
+    <!-- Offcanvas content -->
+    <div class="container">
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#links">Ongoing</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#media">Finished</a>
+        </li>
+      </ul>
 
+      <div class="tab-content">
+        <div id="links" class="tab-pane fade show active">
+          <!-- tab for ongoing projects  -->
+          
 
+          <div class="py-5">
+            <div class="container">
+              <div class="row hidden-md-up">
+                {% for project in ongoing_projects %}
+                
+                <div class="p-2 shadow col-sm-5">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>
+                    {{project.name}}
+                    </h3>
+                    <small class="text-muted">
+                      <b>Representative:{{project.representative}}</b>
+                    </small>
+                    <br>
+                    <small class="text-muted">
+                      Created:{{project.created}} 
+                      <br>
+                      Deadline:{{project.deadline}}
+                    </small>
+                  </div>
+                  <div class="card-body">
+                    
+                    <p class="card-text" style="max-height: 80px; overflow-y: scroll;">
+                      <strong>Description: </strong>
+                      {{project.description}}
+                    </p>
+                  </div>
+                  <div class="card-footer">
+                    <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
+                  </div>
+                </div>
+              </div>
+                
+              {% empty %}
+              <p>No Records</p>
+                {% endfor %}
+              </div><br>
 
+            </div>
+          </div>
+
+          
+        </div>
+        <div id="media" class="tab-pane fade">
+
+          {% comment %} finished projects  {% endcomment %}
+
+          
+
+          <div class="py-5">
+            <div class="container">
+              <div class="row hidden-md-up">
+                {% for project in finished_projects %}
+                
+                <div class="p-2 shadow col-sm-5">
+                <div class="card">
+                  <div class="card-header">
+                    <h3>
+                    {{project.name}}
+                    </h3>
+                    <small class="text-muted">
+                      <b>Representative:{{project.representative}}</b>
+                    </small>
+                    <br>
+                    <small class="text-muted">
+                      Created:{{project.created}} 
+                      <br>
+                      Deadline:{{project.deadline}}
+                    </small>
+                  </div>
+                  <div class="card-body">
+                    
+                    <p class="card-text" style="max-height: 80px; overflow-y: scroll;">
+                      <strong>Description: </strong>
+                      {{project.description}}
+                    </p>
+                  </div>
+                  <div class="card-footer">
+                    <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
+                  </div>
+                </div>
+              </div>
+              {% empty %}
+              <p>No Records</p>
+                {% endfor %}
+              </div><br>
+
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-{% endblock base %} 
+
+
+
+
+
+
+
+{% endblock base %}

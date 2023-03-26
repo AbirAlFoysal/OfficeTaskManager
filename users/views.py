@@ -7,32 +7,11 @@ from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.views.generic import UpdateView
 from django.contrib.auth import authenticate, login
-
+from taskManager.models import *
 
 from .models import *
 from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
 # from verify_email.email_handler import send_verification_email
-
-
-# def register(request):
-#     if request.method == 'POST':
-#         dispatch()
-#         form = RegisterForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('login')
-#     else:
-#         form = RegisterForm()
-
-#     def dispatch(self, request, *args, **kwargs):
-#         # will redirect to the home page if a user tries to access the register page while logged in
-#         if request.user.is_authenticated:
-#             return redirect(to='/')
-#         return super(register(), self).dispatch(request, *args, **kwargs)
-
-    
-#     return render(request, 'users/register.html', {'form': form})
-
 
 
 class RegisterView(View):
@@ -88,26 +67,6 @@ class CustomLoginView(LoginView):
 
 
 
-# def loginView(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             messages.success(request, 'Welcome to ParkingBD!')
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'Invalid username or password')
-#             return render(request, 'users/login.html', {'error': 'Invalid username or password'})
-#     else:
-#         return render(request, 'users/login.html')
-
-
-
-
-
-
 class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'users/password_reset.html'
     email_template_name = 'users/password_reset_email.html'
@@ -120,42 +79,27 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 
 
 
-
-
-
-
-
-
-
-
 class ChangePasswordView(SuccessMessageMixin, PasswordChangeView):
     template_name = 'users/change_password.html'
     success_message = "Successfully Changed Your Password"
     success_url = reverse_lazy('home')
 
 
-# @login_required
-# def profile(request):
-#     if request.method == 'POST':
-#         user_form = UpdateUserForm(request.POST, instance=request.user)
-#         profile_form = UpdateProfileForm(request.POST, request.FILES, instance=request.user.profile)
-
-#         if user_form.is_valid() and profile_form.is_valid():
-#             user_form.save()
-#             profile_form.save()
-#             messages.success(request, 'Your profile is updated successfully')
-#             return redirect(to='users-profile')
-#     else:
-#         user_form = UpdateUserForm(instance=request.user)
-#         profile_form = UpdateProfileForm(instance=request.user.profile)
-
-#     return render(request, 'users/profile.html', {'user_form': user_form, 'profile_form': profile_form})
-
-
-class EditView(UpdateView):
+class EditProfile(UpdateView):
     model = Profile
     # fields = ['name']
-    template_name = 'users/profile.html'
+    template_name = 'users/edit-profile.html'
     fields = '__all__'
     pk_url_kwarg = 'pk'
     success_url = reverse_lazy('home')
+
+
+def profile(request, pk):
+    profile = Profile.objects.get(user=pk)
+    return render(request, 'users/profile.html', {'profile': profile})
+
+
+def profileList(request):
+    profile = Profile.objects.all().order_by('-username')
+    context = {'profile': profile}
+    return render(request, 'users/allmembers.html', context)

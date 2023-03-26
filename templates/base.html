@@ -114,21 +114,23 @@
                 {% if projects %}
                 
                 {% for project in projects %}
-                  <a class="dropdown-item" href="{% url 'projectDetail' project.id %}">{{ project.name }}</a></a>
+                  <a class="dropdown-item" href="{% url 'projectDetail' project.id %}">{{ project.name }}</a>
                 {% endfor %}
                 {% else %}
                 <a class="dropdown-item" href="#">No Projects</a>
                 {% endif %}
+                <hr>
+                <a class="dropdown-item" style="color:black" href="{% url 'projects' %}">All projects</a>
                 </div>
             </li>
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'testpage' %}">TEST-PAGE</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="{% url 'register' %}">ADD Members</a>
+                    <a class="nav-link" href="{% url 'profile-list' %}">MEMBERS</a>
                   </li>
             <li class="nav-item active">
-              <a class="nav-link" href="#">{{user.username}}</a>
+              <a class="nav-link" href="{% url 'profile' request.user.id %}">@{{user.profile.username}}</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>

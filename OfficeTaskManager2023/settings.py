@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'jazzmin',
     'livereload',
     # 'social_django',
+    'widget_tweaks',
 
     'django.contrib.admin',
     'django.contrib.auth',
