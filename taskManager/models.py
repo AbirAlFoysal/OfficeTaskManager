@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 # from django.conf import settings
 # User = settings.AUTH_USER_MODEL
 
@@ -12,7 +13,7 @@ class Project(models.Model):
     name = models.CharField(max_length=100)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
-    description = models.TextField()
+    description = RichTextField(default='No description provided', blank=False, null=False)
     deadline = models.DateTimeField()
     transparent = models.BooleanField(default=True)
 
@@ -23,11 +24,11 @@ class Project(models.Model):
 class Task(models.Model):
     related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = RichTextField(blank=False, null=False)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
-    description = models.TextField(blank=True)
+    description = RichTextField(default='No description provided', blank=True, null=True)
     deadline = models.DateTimeField()
     commentOnCompletion = models.TextField(blank=True)
 
@@ -36,14 +37,16 @@ class Task(models.Model):
     
     
 class Subtask(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
-    description = models.TextField(blank=True)
+    description = RichTextField(default='No description provided', blank=True, null=True)
     dateline = models.DateTimeField()
-    commentOnCompletion = models.TextField(blank=True)
+    commentOnCompletion = RichTextField(default='No comments', blank=True, null=True)
 
     def __str__(self):
         return self.title
@@ -51,7 +54,7 @@ class Subtask(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sender')
     project = models.ForeignKey(Project, on_delete=models.CASCADE, related_name='project')
-    body = models.TextField()
+    body = RichTextField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
@@ -62,7 +65,7 @@ class Comment(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     subtask = models.ForeignKey(Subtask, on_delete=models.CASCADE)
-    comment = models.TextField()
+    comment = RichTextField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -72,7 +75,7 @@ class Comment(models.Model):
 class Reply(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
     critic = models.ForeignKey(User, on_delete=models.CASCADE)
-    reply = models.TextField()
+    reply = RichTextField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -83,7 +86,7 @@ class Link(models.Model):
     assigner = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
-    description = models.TextField()
+    description = RichTextField(default='No description provided', blank=True, null=True)
     link = models.URLField()
     serial = models.CharField(max_length=5, default='LS1')
     created = models.DateTimeField(auto_now_add=True)
@@ -97,7 +100,7 @@ class Media(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
     media = models.FileField(upload_to='media/')
-    description = models.TextField()
+    description = RichTextField(default='No description provided', blank=True, null=True)
     serial = models.CharField(max_length=5, default='MS1')
     created = models.DateTimeField(auto_now_add=True)
 

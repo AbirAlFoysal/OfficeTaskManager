@@ -29,9 +29,11 @@ INSTALLED_APPS = [
     # 3rd party apps
     'jazzmin',
     'livereload',
-    # 'social_django',
     'widget_tweaks',
+    'ckeditor',
+    # 'ckeditor_uploader',
 
+    # django apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +65,19 @@ JAZZMIN_UI_TWEAKS = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+
+# CKEDITOR_UPLOAD_PATH = 'media/ckeditor/'
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'width': 'auto',
+        'height': 300,
+        'autoParagraph': False,  # set autoParagraph to False
+    },
+}
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

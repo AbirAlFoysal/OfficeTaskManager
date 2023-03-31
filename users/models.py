@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from PIL import Image
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from ckeditor.fields import RichTextField
 
 
 # Extending User Model Using a One-To-One Link
@@ -19,7 +20,7 @@ class Profile(models.Model):
 
 
     avatar = models.ImageField(default='default.jpg', upload_to='profile_images')
-    bio = models.TextField(default='No bio available', max_length=500, blank=True)
+    bio = RichTextField(blank=True, null=True)
     address = models.CharField(max_length=100, blank=True)
     nid = models.CharField(max_length=10, blank=True)
     birth_certificate = models.CharField(max_length=30, blank=True)

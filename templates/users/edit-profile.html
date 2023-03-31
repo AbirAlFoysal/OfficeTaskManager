@@ -15,7 +15,7 @@
     <span class="font-semibold">Phone: </span><span>{{user.profile.phone}}</span>
     <br>
 </div>
-
+{{form.media}}
 <form method="post" class="p-4 border-2 m-auto rounded-xl shadow-lg w-3/5 max-w-10/12">
 {% csrf_token %}
 {% for field in form.visible_fields  %}

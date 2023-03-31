@@ -67,7 +67,6 @@ def projectDetail(request, project_id):
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from .models import Project, Task
 from .forms import TaskForm
 
 def add_task(request, project_id):

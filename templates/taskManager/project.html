@@ -49,6 +49,11 @@
     font-size: 28px;
     text-align: justify;
   }
+  .modal-dialog {
+    display: flex;
+    align-items: center;
+    min-height: calc(100% - 1rem);
+  }
 </style>
 
 
@@ -118,17 +123,48 @@
       <div class="card text-left shadow">
         <div class="card-header text-white bg-{{task.theme}}">
           <div class="row">
-            <div class="col-sm-8">
-              <h5 class="card-title">
-                <strong>{{forloop.counter}}.{{task.title}}</strong>
-
-              </h5>
-
+            <div class="col-sm-7">
+                <div style="float: left;">
+                    <span>{{forloop.counter}}.</span>
+                </div>
+                <div style="float: left; margin-left: 10px;">
+                    {{task.title | safe}}
+            </div>
+            
             </div>
             <div class="col-sm-3">
-              <a style="color: #ffffff;" href="#">
+              
+              <a style="color: #ffffff;" type="button" data-toggle="modal" data-target="#{{task.id}}">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
               </a>
+              <!--  modal -->
+              <div class="modal fade text-dark" id="{{task.id}}" tabindex="-1" role="dialog" aria-labelledby="{{task.id}}Label">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="{{task.id}}Label"><strong>Task:</strong> {{task.title | safe}}</h4>
+                    </div>
+                    <div class="modal-body">
+                      <strong>Detail</strong> {{task.description | safe}}
+                      <br>
+                      <strong>Credit:</strong> {{task.credits}}
+                      <br>
+                      <strong>Created by: </strong> {{task.created_by}}
+                      <br>
+                      <strong>Created on: </strong> {{task.created}}
+                      <br>
+                      <strong>Deadline: </strong> {{task.deadline}}
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of modal -->
+
               &nbsp;
               <a style="color: #ffffff;" href="#">
                 <i class="fa fa-comments" aria-hidden="true"></i>
@@ -144,12 +180,40 @@
           {% for obj in task.subtasks %}
           <div class="row">
             <div class="col-sm-8">
-              <p class="card-text"><strong>{{forloop.counter}}. </strong>{{obj}}</p>
+              <p class="card-text">{{forloop.counter}}.{{obj}}</p>
             </div>
-            <div class="col-sm-3 text-success">
-              <a  href="#">
+            <div class="col-sm-3 text-primary">
+              <a  type="button" data-toggle="modal" data-target="#{{obj.title}}">
                 <i class="fa fa-info-circle" aria-hidden="true"></i>
               </a>
+              <!--  modal -->
+              <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog" aria-labelledby="{{obj.title}}Label">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}</h4>
+                    </div>
+                    <div class="modal-body">
+                      <strong>Detail</strong> {{obj.description | safe}}
+                      <br>
+                      <strong>Credit:</strong> {{obj.credits}}
+                      <br>
+                      <strong>Created by: </strong> {{obj.created_by}}
+                      <br>
+                      <strong>Created on: </strong> {{obj.created}}
+                      <br>
+                      <strong>Deadline: </strong> {{obj.deadline}}
+
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of modal -->
+
               &nbsp;
               <a  href="#">
                 <i class="fa fa-comments" aria-hidden="true"></i>
