@@ -28,7 +28,7 @@ class Profile(models.Model):
     # is_varified = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
     # resizing images
     def save(self, *args, **kwargs):

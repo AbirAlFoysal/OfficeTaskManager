@@ -14,18 +14,30 @@ from .forms import RegisterForm, LoginForm, UpdateUserForm, UpdateProfileForm
 # from verify_email.email_handler import send_verification_email
 
 
+def register(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('home')
+    else:
+        form = RegisterForm()
+    return render(request, 'users/register.html', {'form': form})
+
+
 class RegisterView(View):
     form_class = RegisterForm
     initial = {'key': 'value'}
     template_name = 'users/register.html'
 
-    def dispatch(self, request, *args, **kwargs):
-        # will redirect to the home page if a user tries to access the register page while logged in
-        if request.user.is_authenticated:
-            return redirect(to='/')
+    # def dispatch(self, request, *args, **kwargs):
+    #     # will redirect to the home page if a user tries to access the register page while logged in
+    #     if request.user.is_authenticated:
+    #         return redirect(to='/')
 
-        # else process dispatch as it otherwise normally would
-        return super(RegisterView, self).dispatch(request, *args, **kwargs)
+    #     # else process dispatch as it otherwise normally would
+    #     return super(RegisterView, self).dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         form = self.form_class(initial=self.initial)

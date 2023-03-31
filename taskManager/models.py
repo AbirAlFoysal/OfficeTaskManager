@@ -59,6 +59,7 @@ class Message(models.Model):
 
 class Comment(models.Model):
     critic = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
     subtask = models.ForeignKey(Subtask, on_delete=models.CASCADE)
     comment = models.TextField()

@@ -16,6 +16,18 @@
     box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
     transform: translateY(-50%);
   }
+   .text-send{
+    bottom:0px;
+   }
+
+  .sticky-message-bar {
+    position: fixed;
+    top: 50%;
+    right:0%;
+    height: 70vh;
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
+    transform: translateX(-4%);
+  }
 
   .sticky-icon-bar a {
     display: block;
@@ -58,7 +70,7 @@
         <strong>Representative: </strong><a href="#">{{project.representative}}</a><br>
         <strong>Members: </strong>
         {% for member in project.members.all %}
-        <a href="#">{{ member.username }}</a>,
+        <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
         {% endfor %}
         <br>
         <strong>Deadline: </strong>{{project.deadline}}
@@ -96,7 +108,7 @@
     <div class="container text-right">
       <small>
         <strong>Tasks: </strong> {{task_completed}}/{{total_task}}
-        <a class="btn btn-sm btn-primary" href="#"><strong>+</strong>Task</a>
+        <a class="btn btn-sm btn-primary" href="{% url 'addTask' project.id %}"><strong>+</strong>Task</a>
       </small>
     </div>
     <!-- end of task count and add task button -->
@@ -173,9 +185,9 @@
 
 
   <!-- messages -->
-  <div class="col-sm-3 bg-light rounded-md shadow">
+  <div class="col-sm-3 bg-light rounded-md shadow sticky-message-bar border border-3 rounded">
     {% comment %} <div class="vr"></div> {% endcomment %}
-    <center><strong>Messages:</strong></center>
+    <center><strong class="bg-primary text-white rounded p-2">Messages:</strong></center>
     <hr>
 
     <div class="overflow-auto" style="max-height: 350px;" id="small-screen-container">
@@ -187,11 +199,13 @@
           <small>{{msg.created}}</small> 
           </div>
           <div class="card-body">
-            <p class="p-2">{{msg.body}}</p>
+            <p>{{msg.body}}</p>
           </div>
         </div>
       {% endfor %}
     </div>
+
+    <div class="text-send">
     <hr>
     <div class="text-right">
       <div class="input-group mb-3">
@@ -202,6 +216,8 @@
       </div>
       &nbsp;&nbsp;&nbsp;&nbsp;
     </div>
+  </div>
+
     <br>
   </div>
   <!-- end of messages  -->

@@ -11,7 +11,7 @@ urlpatterns = [
 #     path('', home, name='users-home'),
     path('', include('social_django.urls', namespace='social')),
     
-    path('register/', RegisterView.as_view(), name='register'),
+    path('register/', register, name='register'),
 
     path('login/', CustomLoginView.as_view(redirect_authenticated_user=True, template_name='users/login.html',
                                            authentication_form=LoginForm), name='login'),
@@ -34,5 +34,9 @@ urlpatterns = [
      path('profile/<int:pk>', profile, name='profile'),
 
      path('member-list/', profileList, name='profile-list'),
+
+
+
+     # path('assign_members/', register, name='assign_members'),
 
 ]

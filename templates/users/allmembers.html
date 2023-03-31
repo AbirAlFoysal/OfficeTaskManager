@@ -26,7 +26,7 @@ TEST-PAGE
 <div class="container">
     <div class="row">
         {% for profile in profile %}
-    <div class="card col-sm-5 col-md-4 col-lg-3">
+    <div class="card col-sm-5 col-md-4 col-lg-3 p-2 m-1">
     <div class="card-body">
     <div class="d-flex flex-column align-items-center text-center">
     <img alt="" class="rounded-circle" src="/media/default.jpg" width="150">
@@ -45,7 +45,7 @@ TEST-PAGE
     </li>
     {% endfor %}
 </p>
-    <button class="btn btn-primary">Profile</button>
+    <a href="{% url 'profile' profile.user.id %}" class="btn btn-primary">Profile</a>
     <button class="btn btn-outline-primary">Message</button>
     </div>
     </div>
