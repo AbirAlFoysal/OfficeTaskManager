@@ -4,23 +4,164 @@ TEST-PAGE
 {% endblock title %}
 {% block base %}
 
-<style>
-  .modal-dialog {
-    display: flex;
-    align-items: center;
-    min-height: calc(100% - 1rem);
-  }
-</style>
+
+<div class="row">
+  <div class="col-sm-9">
+    <div class="row">
+      <div class="col-sm-7">
+        project name
+      </div>
+      <div class="col-sm-5">
+        some detail
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-sm-2">
+        side bar
+      </div>
+      <div class="col-sm-10">
+        <div>
+          add task fixed button
+        </div>
+        <div>
+        scrollable task list
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-3">
+    messages
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <div class='container'>
-
-    <!-- index.html -->
-
-
+  <!-- index.html -->
   <meta charset="UTF-8">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+    {% for task in task %}
+    <li>
+      <p>{{task}}</p>
+      <ul>
+        {% for subtask in task.subtasks %}
+        <li>
+          {{subtask}}
+        </li>{% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+
+
+
+
+  <!-- Offcanvas buttons -->
+<div class="d-flex justify-content-end mb-2">
+  <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#linksCanvas">Links</button>
+  <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#mediaCanvas">Media</button>
+</div>
+
+<!-- Links Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="linksCanvas" aria-labelledby="linksCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="linksCanvasLabel">Links</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul>
+      <li><a href="#">Link 1</a></li>
+      <li><a href="#">Link 2</a></li>
+      <li><a href="#">Link 3</a></li>
+    </ul>
+  </div>
+</div>
+
+<!-- Media Offcanvas -->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="mediaCanvas" aria-labelledby="mediaCanvasLabel">
+  <div class="offcanvas-header">
+    <h5 class="offcanvas-title" id="mediaCanvasLabel">Media</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    <ul>
+      <li><a href="#">Media 1</a></li>
+      <li><a href="#">Media 2</a></li>
+      <li><a href="#">Media 3</a></li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  var linksBtn = document.querySelector("#linksCanvas button");
+  var mediaBtn = document.querySelector("#mediaCanvas button");
+
+  linksBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+    var linksTab = document.querySelector("#links");
+    var mediaTab = document.querySelector("#media");
+    linksTab.classList.add("show", "active");
+    mediaTab.classList.remove("show", "active");
+  });
+
+  mediaBtn.addEventListener("click", function(event) {
+    event.preventDefault();
+    var linksTab = document.querySelector("#links");
+    var mediaTab = document.querySelector("#media");
+    mediaTab.classList.add("show", "active");
+    linksTab.classList.remove("show", "active");
+  });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {% comment %} chat {% endcomment %}
   <div class="container mt-5">
     <h1>Chat Box Example</h1>
     <p>Click the button to open the chat box:</p>
@@ -43,37 +184,8 @@ TEST-PAGE
       </div>
     </div>
   </div>
-
-
-
-  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
-    Open Modal
-  </button>
-  
-  <!-- Button trigger modal -->
-  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Modal Title</h4>
-        </div>
-        <div class="modal-body">
-          Modal content goes here.
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- end of modal -->
-  
-
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
   <script>
-    $(function() {
+    $(function () {
       var chatBox = $('#chat-box');
       var chatBtn = $('#chat-btn');
       var closeBtn = $('#close-chat-btn');
@@ -81,15 +193,15 @@ TEST-PAGE
       var messageForm = $('#message-form');
       var messageInput = $('#message-input');
 
-      chatBtn.click(function() {
+      chatBtn.click(function () {
         chatBox.removeClass('d-none');
       });
 
-      closeBtn.click(function() {
+      closeBtn.click(function () {
         chatBox.addClass('d-none');
       });
 
-      messageForm.submit(function(event) {
+      messageForm.submit(function (event) {
         event.preventDefault();
         var message = messageInput.val();
         if (message) {
@@ -100,6 +212,12 @@ TEST-PAGE
       });
     });
   </script>
+  {% comment %} end chat {% endcomment %}
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
 
 </div>
-{% endblock base %} 
+{% endblock base %}

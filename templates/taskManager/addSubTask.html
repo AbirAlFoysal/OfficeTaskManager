@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block base %}
+
+<!-- subtask form template -->
+<div id="subtask-template" style="display: none;">
+    <div class="subtask-form">
+      <h3>Add Subtask</h3>
+      <form class="add-subtask-form">
+        {% csrf_token %}
+        <input type="hidden" name="task_id" value="{{ task.id }}">
+        <div class="form-group">
+          <label>Title:</label>
+          <input type="text" name="title" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Description:</label>
+          <textarea name="description" class="form-control" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Deadline:</label>
+          <input type="datetime-local" name="deadline" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-danger cancel-subtask-form">Cancel</button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- subtask form container -->
+  <div id="subtask-container">
+    <button id="add-subtask-btn" class="btn btn-primary">+</button>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var maxSubtasks = 10;
+      var subtaskCount = 0;
+    
+      // add subtask form
+      $('#add-subtask-btn').click(function() {
+        if (subtaskCount < maxSubtasks) {
+          var subtaskForm = $('#subtask-template').html();
+          $('#subtask-container').append(subtaskForm);
+          subtaskCount++;
+        }
+      });
+    
+      // cancel subtask form
+      $(document).on('click', '.cancel-subtask-form', function() {
+        $(this).closest('.subtask-form').remove();
+        subtaskCount--;
+      });
+    
+      // submit subtask form
+      $(document).on('submit', '.add-subtask-form', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
+        var data = form.serialize();
+        $.ajax({
+          type: 'POST',
+          url: url,
+          data: data,
+          success: function(response) {
+            // handle success
+            form.closest('.subtask-form').remove();
+            subtaskCount--;
+            // handle response
+          },
+          error: function(xhr, status, error) {
+            // handle error
+          }
+        });
+      });
+    });
+    </script>
+      
+
+{% endblock %}

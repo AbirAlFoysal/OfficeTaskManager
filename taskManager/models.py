@@ -26,6 +26,7 @@ class Task(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = RichTextField(blank=False, null=False)
     status = models.IntegerField(default=0)
+    completed = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
     description = RichTextField(default='No description provided', blank=True, null=True)

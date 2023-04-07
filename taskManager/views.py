@@ -4,6 +4,11 @@ from .models import *
 from datetime import datetime
 from django.utils import timezone
 
+
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .forms import *
+
 # Create your views here.
 
 @login_required(login_url='/login')
@@ -13,7 +18,26 @@ def index(request):
     return render(request, 'taskManager/index.html',{'projects': projects})
 
 def testpage(request):
-    return render(request, 'taskManager/testpage.html')
+    project = Project.objects.all().filter(id = 1)
+    task = Task.objects.all().filter(related_project = 2)
+    for obj in task:
+        subtasks = Subtask.objects.filter(task = obj)
+        obj.subtasks = subtasks
+    if request.method == 'POST':
+        object_type = request.POST.get('object_type')
+
+        if object_type == 'task':
+            # handle task submission
+            pass
+        elif object_type == 'subtask':
+            # handle subtask submission
+            pass
+
+    # render the template for the page
+    
+
+    return render(request, 'taskManager/testpage.html',{'project': project, 'task': task})
+
 
 def projectCollection(request):
     ongoing_projects = Project.objects.all().filter(status = 0)
@@ -65,10 +89,6 @@ def projectDetail(request, project_id):
 
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from .forms import TaskForm
-
 def add_task(request, project_id):
     project = get_object_or_404(Project, id=project_id)
     if request.method == 'POST':
@@ -82,3 +102,22 @@ def add_task(request, project_id):
     else:
         form = TaskForm()
     return render(request, 'taskManager/addTask.html', {'form': form, 'project': project})
+
+
+@login_required
+def add_subtask(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == "POST":
+        form = SubtaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Subtask added successfully.")
+            form = SubtaskForm() # Create a new form for adding another subtask
+    else:
+        form = SubtaskForm()
+
+    context = {
+        "form": form,
+        "task": task,
+    }
+    return render(request, 'TaskManager/addSubTask.html', context)
