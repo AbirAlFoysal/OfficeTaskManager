@@ -1,6 +1,7 @@
 from django import forms
-from .models import Task, Subtask
+from .models import Task, Subtask, Message
 from ckeditor.fields import CKEditorWidget
+from django.forms import widgets
 
 class TaskForm(forms.ModelForm):
     description = forms.CharField(widget=CKEditorWidget(config_name='default'))
@@ -15,12 +16,10 @@ class TaskForm(forms.ModelForm):
 class SubtaskForm(forms.ModelForm):
     class Meta:
         model = Subtask
-        fields = ('title', 'credits', 'description', 'dateline')
+        fields = ('title', 'description', 'deadline', 'credits')
 
-class task_subtask(forms.ModelForm):
+
+class MessageForm(forms.ModelForm):
     class Meta:
-        model = Task
-        fields = '__all__' 
-        widgets = {
-            'subtasks': forms.CheckboxSelectMultiple(),
-        }
+        model = Message
+        fields = ['body']

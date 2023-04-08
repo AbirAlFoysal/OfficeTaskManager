@@ -184,6 +184,7 @@
                           <div class="modal-body">
                             <strong>Detail</strong> {{task.description | safe}}
                             <br>
+                            <small class="text-muted">
                             <strong>Credit:</strong> {{task.credits}}
                             <br>
                             <strong>Created by: </strong> {{task.created_by}}
@@ -191,7 +192,7 @@
                             <strong>Created on: </strong> {{task.created}}
                             <br>
                             <strong>Deadline: </strong> {{task.deadline}}
-
+                          </small>
                           </div>
 
                           <div class="modal-footer">
@@ -235,6 +236,7 @@
                           <div class="modal-body">
                             <strong>Detail</strong> {{obj.description | safe}}
                             <br>
+                            <small  class="text-muted">
                             <strong>Credit:</strong> {{obj.credits}}
                             <br>
                             <strong>Created by: </strong> {{obj.created_by}}
@@ -242,7 +244,7 @@
                             <strong>Created on: </strong> {{obj.created}}
                             <br>
                             <strong>Deadline: </strong> {{obj.deadline}}
-
+                          </small>
                           </div>
 
                           <div class="modal-footer">
@@ -275,7 +277,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                   <a class="btn btn-outline-warning btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
-                  <a class="btn btn-outline-dark btn-sm" href="#">Comment & Update</a>
+                  <a class="btn btn-outline-dark btn-sm" href="#">Modify</a>
                   <a class="btn btn-outline-{{task.theme}} btn-sm" href="#">Update</a>
                 </div>
               </div>
@@ -332,14 +334,19 @@
               </div>
               {% endfor %}
             </div>
+            <!-- messsage form  -->
             <div class="message-form">
-              <form>
-                <input type="text" placeholder="Type your message here">
-                <button type="submit">Send</button>
+              <form method="POST">
+                {% csrf_token %}
+                <input type="text" id="id_msg-body" name="msg-body" required=""  placeholder="Type your message here">
+                <button type="submit" name="messagebtn">Send</button>
               </form>
             </div>
           </div>
         </div>
+        <!-- end of messages  -->
+
+        <!-- link tab  -->
         <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
           <h3>Links</h3>
           <p>This is the links tab.</p>

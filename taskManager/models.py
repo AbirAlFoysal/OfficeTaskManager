@@ -29,7 +29,7 @@ class Task(models.Model):
     completed = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
-    description = RichTextField(default='No description provided', blank=True, null=True)
+    description = RichTextField(default='No description provided')
     deadline = models.DateTimeField()
     commentOnCompletion = models.TextField(blank=True)
 
@@ -41,12 +41,12 @@ class Subtask(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=100, null=False, blank=False)
     status = models.IntegerField(default=0)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
     description = RichTextField(default='No description provided', blank=True, null=True)
-    dateline = models.DateTimeField()
+    deadline = models.DateTimeField()
     commentOnCompletion = RichTextField(default='No comments', blank=True, null=True)
 
     def __str__(self):

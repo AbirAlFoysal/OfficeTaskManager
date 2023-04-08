@@ -48,41 +48,76 @@ def projectDetail(request, project_id):
     msg =  Message.objects.all().filter(project = project_id)
     project = Project.objects.get(id=project_id)
     task = Task.objects.all().filter(related_project = project_id).order_by('deadline')
-    
 
     for obj in task:
         deadline = obj.deadline
+        # remaining time calculation for each task 
         remaining_time = deadline - timezone.now()
         remaining_days = remaining_time.days + 1
         remaining_hour = remaining_time.seconds // 3600
         remaining_minutes = (remaining_time.seconds % 3600) // 60
+        # task theme determination:
+            # if 3 days remains, warning 
         if remaining_days <= 3 and remaining_days >= 1:
             theme = "warning"
+            # if 1 day remains, danger 
         elif remaining_days < 1:
             theme = "danger"
         else:
+            # default success 
             theme = "success"
         obj.theme = theme
-
+            # if day is less than 0, its expired(dark)
         if remaining_days < 0 :
             remaining_days = 0
             remaining_hour = 0
             remaining_minutes = 0
             obj.theme = "dark"
+        # remaining time shown below the task 
         obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
+        # subtask of respective task from the forloop
         subtasks = Subtask.objects.filter(task = obj)
+        # subtask object identification 
         obj.subtasks = subtasks
-    # task = task.order_by(-deadline)
+    # task count 
     total_task = Task.objects.all().filter(related_project = project_id).count()
     task_completed = Task.objects.all().filter(related_project = project_id, status = 1).count()
     task_remaining = Task.objects.all().filter(related_project = project_id, status = 0).count()
+
+    # declear forms 
+    message_form = MessageForm(prefix = "msg")
+
+    # post methodes of the page 
+    if request.method == 'POST':
+        pass
+        # for messages 
+        if 'messagebtn' in request.POST:
+            msgForm = MessageForm(request.POST, prefix = "msg")
+            if msgForm.is_valid():
+                message = msgForm.save(commit=False)
+                message.project = project
+                message.sender = request.user
+                message.save()
+                return redirect('projectDetail', project_id=project_id)
+            else:
+                messages.error(request, 'Message not sent!')
+                msgForm = MessageForm()
+                return redirect('projectDetail', project_id=project_id)
+        return redirect('projectDetail', project_id=project_id)
+        
+
 
 
     # comment = Comment.objects.all().filter(project = project_id)
     # for obj in comment:
 
 
-    context = {'project': project, 'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg}
+    context = {'project': project,
+            'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,
+            'message_form': message_form
+            
+            }
+    
     return render(request, 'taskManager/project.html', context)
 
 
@@ -91,6 +126,7 @@ def projectDetail(request, project_id):
 
 def add_task(request, project_id):
     project = get_object_or_404(Project, id=project_id)
+    tasks = Task.objects.filter(related_project = project)
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -101,23 +137,28 @@ def add_task(request, project_id):
             return redirect('projectDetail', project_id=project_id)
     else:
         form = TaskForm()
-    return render(request, 'taskManager/addTask.html', {'form': form, 'project': project})
+    return render(request, 'taskManager/addTask.html', {'form': form, 'project': project, 'tasks': tasks})
 
 
-@login_required
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Project, Task, Subtask
+from .forms import SubtaskForm
+
 def add_subtask(request, task_id):
     task = get_object_or_404(Task, id=task_id)
-    if request.method == "POST":
+    subtasks = Subtask.objects.filter(task = task)
+    project = task.related_project
+    if request.method == 'POST':
         form = SubtaskForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Subtask added successfully.")
-            form = SubtaskForm() # Create a new form for adding another subtask
+            subtask = form.save(commit=False)
+            subtask.task = task
+            subtask.created_by = request.user
+            subtask.related_project = project
+            subtask.save()
+            messages.success(request, 'Subtask added successfully!')
+            return redirect('projectDetail', project_id=project.id)
     else:
         form = SubtaskForm()
-
-    context = {
-        "form": form,
-        "task": task,
-    }
-    return render(request, 'TaskManager/addSubTask.html', context)
+    return render(request, 'TaskManager/addSubTask.html', {'form': form, 'task': task, 'subtasks': subtasks, 'project': project})
