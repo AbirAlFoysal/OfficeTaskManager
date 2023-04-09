@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block title %}
+Modify task: "{{task | safe}}"
+{% endblock title %}
+{% block base %}
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-6">
+      <h1>Project: <a href="{% url 'projectDetail' task.related_project.id %}"> "{{task.related_project}}"</a></h1>
+      <strong> Task title:</strong> {{task | safe}}
+    </div>
+    <div class="col-sm-6">
+      <small class="text-muted">Deatline: {{task.deadline}}</small>
+      <p> <strong>Task description:</strong>{{task.description | safe}}</p>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<div class="container">
+  <div class="row">
+    <div class="col-sm-8">
+      <h3 style="text-align: center;"> <strong> Modify Task</strong></h3>
+      <br>
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="row">
+          <div class="col-sm-6">
+
+            <p>
+              <select id="id_related_project" name="related_project" required="false" hidden="true">
+                <option selected="" value="{{task.related_project}}">{{task.related_project}}</option>
+              </select>
+            </p>
+            <p>
+              <select id="id_created_by" hidden="true" name="created_by" required="false">
+                <option selected="" value="{{task.created_by}}">---------</option>
+              </select>
+            </p>
+            <p>
+              <label for="id_title">Title:</label>
+            </p>
+            <div class="django-ckeditor-widget" data-field-id="id_title" style="display: inline-block;">
+              <textarea cols="40" data-config='{
+            "toolbar": [["Bold", "Link"]]
+        }' data-external-plugin-resources="[]" data-id="id_title" data-processed="0" data-type="ckeditortype"
+                id="id_title" name="title" required="false" rows="1">{{task.title | safe}}</textarea>
+            </div>
+
+            <p>
+              <label for="id_completed">Mark done:</label>
+              <input id="id_completed" name="completed" type="checkbox">
+            </p>
+            <p>
+              <label for="id_credits">Credits:</label>
+              <input id="id_credits" name="credits" required="false" type="number" value="{{ task.credits }}">
+            </p>
+          </div>
+          <div class="col-sm-6">
+
+            <p>
+              <label for="id_description">Description:</label>
+            </p>
+            <div class="django-ckeditor-widget" data-field-id="id_description" style="display: inline-block;">
+              <textarea cols="40" data-config='{
+        "toolbar": [["Bold", "Link"]]
+    }' data-external-plugin-resources="[]" data-id="id_description" data-processed="0" data-type="ckeditortype"
+                id="id_description" name="description" required="false" rows="3">{{task.description | safe}}</textarea>
+            </div>
+            <p></p>
+            <p>
+              <label for="id_deadline">Deadline:</label>
+              <input id="id_deadline" name="deadline" required="false" type="datetime-local"
+                value="{{ task.deadline|date:'Y-m-d\TH:i' }}">
+            </p>
+          </div>
+        </div>
+        {{form.media}}
+
+        <input name="taskbtn" type="submit">
+      </form>
+    </div>
+    <div class="col-sm-4 container" style="border-left: 1px solid grey">
+      <form method="post">
+        {% csrf_token %}
+        <h3>Delete Subtasks: </h3>
+        <ul>
+          {% for subtask in subtasks %}
+          <li type="A">
+            <label>
+              <input type="checkbox" name="subtasks" value="{{ subtask.id }}">
+              {{ subtask.title |safe }}
+            </label>
+          </li>
+          {% endfor %}
+        </ul>
+
+        
+
+        <button type="submit" name="subtaskbtn" class="btn btn-danger">Delete</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+
+
+
+<br><br><br>
+
+{% endblock %}

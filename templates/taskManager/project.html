@@ -277,7 +277,7 @@
                 </div>
                 <div class="col-sm-6 text-right">
                   <a class="btn btn-outline-warning btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
-                  <a class="btn btn-outline-dark btn-sm" href="#">Modify</a>
+                  <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify</a>
                   <a class="btn btn-outline-{{task.theme}} btn-sm" href="#">Update</a>
                 </div>
               </div>
@@ -311,7 +311,7 @@
         <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
           <!--  Messages  -->
           <div class="message-container">
-            <div class="message-list">
+            <div class="message-list" id="small-screen-container">
               <!-- message items will be added dynamically -->
               {% for msg in msg %}
               <div class="message">

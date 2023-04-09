@@ -162,3 +162,28 @@ def add_subtask(request, task_id):
     else:
         form = SubtaskForm()
     return render(request, 'TaskManager/addSubTask.html', {'form': form, 'task': task, 'subtasks': subtasks, 'project': project})
+
+
+
+
+def update_task(request, task_id):
+    task = get_object_or_404(Task, pk=task_id)
+    subtasks = Subtask.objects.all().filter(task = task)
+    form = TaskForm(request.POST, instance=task)
+    if request.method == 'POST':
+        if 'subtaskbtn' in request.POST:
+            subtask_ids = request.POST.getlist('subtasks')
+            for subtask_id in subtask_ids:
+                subtask = get_object_or_404(Subtask, pk=subtask_id)
+                subtask.delete()
+
+        if 'taskbtn' in request.POST:
+            if form.is_valid():
+                task = form.save(commit=False)
+                task.related_project = task.related_project
+                task.save()
+                messages.success(request, 'Task updated successfully!')
+                return redirect('update_task', task_id=task.id) 
+    context = {'task': task, 'subtasks': subtasks, 'form': form}
+    return render(request, 'TaskManager/update_task.html', context)
+ 
