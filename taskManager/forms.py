@@ -23,3 +23,7 @@ class MessageForm(forms.ModelForm):
     class Meta:
         model = Message
         fields = ['body']
+
+
+class DeleteTaskForm(forms.Form):
+    confirm_delete = forms.BooleanField(required=True)

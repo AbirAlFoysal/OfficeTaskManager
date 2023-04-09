@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block title %}
-Modify task: "{{task | safe}}"
+Modify task: "{{task.title | safe}}"
 {% endblock title %}
 {% block base %}
 
 <div class="container">
   <div class="row">
     <div class="col-sm-6">
-      <h1>Project: <a href="{% url 'projectDetail' task.related_project.id %}"> "{{task.related_project}}"</a></h1>
+      <h3>Project: <a href="{% url 'projectDetail' task.related_project.id %}"> "{{task.related_project}}"</a></h3>
       <strong> Task title:</strong> {{task | safe}}
     </div>
     <div class="col-sm-6">
@@ -22,7 +22,56 @@ Modify task: "{{task | safe}}"
 <div class="container">
   <div class="row">
     <div class="col-sm-8">
-      <h3 style="text-align: center;"> <strong> Modify Task</strong></h3>
+      <div class="row">
+        <div class="col-sm-6">
+          <h3 style="float: right;"> <strong> Modify this Task</strong></h3>
+
+        </div>
+        <div class="col-sm-6">
+
+          <!-- Button to trigger modal -->
+          <button class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteModal"
+            style="float: right;">Remove This Task</button>
+
+          <!-- Modal -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Delete Task Confirmation</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p style="text-align: center;">Are you sure you want to delete this task?</p>
+
+                  <form method="POST" action="{% url 'update_task' task.id %}">
+                    {% csrf_token %}
+                    <div class="form-group">
+                      {{ delete_form.confirm_delete }}
+                    </div>
+                    <center>
+                      <button type="submit" name="deletetaskbtn" class="btn btn-sm btn-danger">Remove this
+                        Task</button>
+                      <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                    </center>
+                  </form>
+
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+
+
+
+
+
+        </div>
+      </div>
       <br>
       <form method="post">
         {% csrf_token %}
@@ -84,9 +133,12 @@ Modify task: "{{task | safe}}"
       </form>
     </div>
     <div class="col-sm-4 container" style="border-left: 1px solid grey">
+
+      <h3>Delete Subtasks: </h3>
+      {% if subtasks %}
       <form method="post">
         {% csrf_token %}
-        <h3>Delete Subtasks: </h3>
+
         <ul>
           {% for subtask in subtasks %}
           <li type="A">
@@ -97,12 +149,12 @@ Modify task: "{{task | safe}}"
           </li>
           {% endfor %}
         </ul>
-
-        
-
         <button type="submit" name="subtaskbtn" class="btn btn-danger">Delete</button>
       </form>
+      {% else %}
+      <p>There are no subtasks for this task.</p>
 
+      {% endif %}
     </div>
   </div>
 </div>

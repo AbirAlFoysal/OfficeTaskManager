@@ -184,6 +184,12 @@ def update_task(request, task_id):
                 task.save()
                 messages.success(request, 'Task updated successfully!')
                 return redirect('update_task', task_id=task.id) 
+            
+        if 'deletetaskbtn' in request.POST:
+            task.delete()
+            messages.success(request, 'Task deleted successfully!')
+            return redirect('projectDetail', project_id=task.related_project.id)
+    
     context = {'task': task, 'subtasks': subtasks, 'form': form}
     return render(request, 'TaskManager/update_task.html', context)
  
