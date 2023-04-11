@@ -51,8 +51,34 @@ def projectCollection(request):
 def projectDetail(request, project_id):
     msg =  Message.objects.all().filter(project = project_id)
     project = Project.objects.get(id=project_id)
-    task = Task.objects.all().filter(related_project = project_id).order_by('deadline')
-
+    alltasks = Task.objects.all().filter(related_project = project_id).order_by('deadline')
+    expired_tasks = alltasks.filter(status = 2)
+    completed_tasks = alltasks.filter(status = 1)
+    task = alltasks.filter(status = 0)
+    for obj in expired_tasks:
+        deadline = obj.deadline
+        remaining_time = deadline - timezone.now()
+        remaining_days = remaining_time.days + 1
+        remaining_hour = remaining_time.seconds // 3600
+        remaining_minutes = (remaining_time.seconds % 3600) // 60
+        theme = "dark"
+        obj.theme = theme
+        obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
+        subtasks = Subtask.objects.filter(task = obj)
+        obj.subtasks = subtasks
+    
+    for obj in completed_tasks:
+        deadline = obj.deadline
+        remaining_time = deadline - timezone.now()
+        remaining_days = remaining_time.days + 1
+        remaining_hour = remaining_time.seconds // 3600
+        remaining_minutes = (remaining_time.seconds % 3600) // 60
+        theme = "dark"
+        obj.theme = theme
+        obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
+        subtasks = Subtask.objects.filter(task = obj)
+        obj.subtasks = subtasks
+        
     for obj in task:
         deadline = obj.deadline
         # remaining time calculation for each task 
@@ -77,6 +103,9 @@ def projectDetail(request, project_id):
             remaining_hour = 0
             remaining_minutes = 0
             obj.theme = "dark"
+             # set the task status to 2 (completed) if remaining_days is less than 0
+            obj.status = 2
+            obj.save()
         # remaining time shown below the task 
         obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
         # subtask of respective task from the forloop
@@ -87,10 +116,8 @@ def projectDetail(request, project_id):
     total_task = Task.objects.all().filter(related_project = project_id).count()
     task_completed = Task.objects.all().filter(related_project = project_id, status = 1).count()
     task_remaining = Task.objects.all().filter(related_project = project_id, status = 0).count()
-
     # declear forms 
     message_form = MessageForm(prefix = "msg")
-
     # post methodes of the page 
     if request.method == 'POST':
         pass
@@ -108,18 +135,11 @@ def projectDetail(request, project_id):
                 msgForm = MessageForm()
                 return redirect('projectDetail', project_id=project_id)
         return redirect('projectDetail', project_id=project_id)
-        
-
-
-
+   
     # comment = Comment.objects.all().filter(project = project_id)
     # for obj in comment:
 
-
-    context = {'project': project,
-            'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,
-            'message_form': message_form
-            
+    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks
             }
     
     return render(request, 'taskManager/project.html', context)

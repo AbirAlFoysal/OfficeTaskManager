@@ -35,41 +35,37 @@ TEST-PAGE
 </div>
 
 
-
-
-
-<ul class="nav nav-tabs" id="myTab" role="tablist">
-  <li class="nav-item" role="presentation">
-    <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button"
-      role="tab" aria-controls="messages" aria-selected="true">Messages</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links" type="button" role="tab"
-      aria-controls="links" aria-selected="false">Links</button>
-  </li>
-  <li class="nav-item" role="presentation">
-    <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab"
-      aria-controls="media" aria-selected="false">Media</button>
-  </li>
-</ul>
-<div class="tab-content" id="myTabContent">
-  <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
-    <!--  Messages  -->
-
-    messages
-  </div>
-  <!-- end of messages  -->
-
-  <!-- link tab  -->
-  <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
-    <h3>Links</h3>
-    <p>This is the links tab.</p>
-  </div>
-  <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-    <h3>Media</h3>
-    <p>This is the media tab.</p>
+<!-- task framwork  -->
+<div id="framework">
+  <div id="task-loop">
+    original
   </div>
 </div>
+
+<div id="target1"></div>
+<div id="target2"></div>
+<!-- js for copying task framework  -->
+<script>
+  window.onload = function() {
+  // Copy contents of framework to target1
+  var framework = document.getElementById("framework");
+  var target1 = document.getElementById("target1");
+  var target2 = document.getElementById("target2");
+
+  target1.innerHTML = framework.innerHTML;
+  
+  // Update task-loop content in target1
+  var taskLoop1 = document.getElementById("target1").querySelector("#task-loop");
+  taskLoop1.innerHTML = taskLoop1.innerHTML.replace(/original/g, "first copy");
+  
+  // Copy contents of framework to target2
+  target2.innerHTML = framework.innerHTML;
+  
+  // Update task-loop content in target2
+  var taskLoop2 = document.getElementById("target2").querySelector("#task-loop");
+  taskLoop2.innerHTML = taskLoop2.innerHTML.replace(/original/g, "2nd copy");
+};
+</script>
 
 
 
