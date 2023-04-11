@@ -38,6 +38,47 @@ TEST-PAGE
 
 
 
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button"
+      role="tab" aria-controls="messages" aria-selected="true">Messages</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links" type="button" role="tab"
+      aria-controls="links" aria-selected="false">Links</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab"
+      aria-controls="media" aria-selected="false">Media</button>
+  </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+    <!--  Messages  -->
+
+    messages
+  </div>
+  <!-- end of messages  -->
+
+  <!-- link tab  -->
+  <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
+    <h3>Links</h3>
+    <p>This is the links tab.</p>
+  </div>
+  <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+    <h3>Media</h3>
+    <p>This is the media tab.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
 
 <style>
   /**

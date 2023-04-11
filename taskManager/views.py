@@ -44,6 +44,10 @@ def projectCollection(request):
     finished_projects = Project.objects.all().filter(status = 1)
     return render(request, 'taskManager/projectCollection.html',{'ongoing_projects': ongoing_projects, 'finished_projects': finished_projects})
 
+
+
+
+
 def projectDetail(request, project_id):
     msg =  Message.objects.all().filter(project = project_id)
     project = Project.objects.get(id=project_id)

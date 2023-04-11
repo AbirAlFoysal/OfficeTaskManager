@@ -112,13 +112,13 @@
   <div class="col-sm-8">
     <div class="row">
       <div class="col-sm-8">
-        <h1 class="container" style="padding-left: 10vw;">{{project}}
+        <h2 class="container" style="padding-left: 10vw;">{{project}}
           <span class="badge">
             <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
               Detail
             </button>
           </span>
-        </h1>
+        </h2>
       </div>
       <div class="col-sm-4">
         <small>
@@ -144,15 +144,56 @@
               class="fab fa-youtube"></i></a>
         </div>
       </div>
+
       <div class="col-sm-10">
-        <div>
+
+
+
+
+
+        <div class="row">
+          <div class="col-sm-8">
+           
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+          
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages" type="button"
+              role="tab" aria-controls="messages" aria-selected="true">Ongoing</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links" type="button" role="tab"
+              aria-controls="links" aria-selected="false">Expired</button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button" role="tab"
+              aria-controls="media" aria-selected="false">Completed</button>
+          </li>
+        </ul> 
+          </div>
+          <div class="col-sm-4">
+            
+        <!-- task count  -->
+        <div style="float: right; margin-right: 12px;">
           <small>
             <strong>Tasks: </strong> {{task_completed}}/{{total_task}}
             <a class="btn btn-sm btn-primary" href="{% url 'addTask' project.id %}"><strong>+</strong>Task</a>
           </small>
         </div>
-        <hr>
-        <div>
+        <!-- task count end  -->
+
+          </div>
+        </div>
+
+
+
+
+        <div class="tab-content" id="myTabContent">
+<br>
+          <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+            <!--  Messages  -->
+        
+
+          <!-- tasks list start  -->
           <div class="container">
             {% for task in task %}
             <div class="card text-left shadow">
@@ -286,10 +327,34 @@
             {% endfor %}
           </div>
           <!-- end of task list -->
+                  </div>
+          <!-- end of messages  -->
+        
+          <!-- link tab  -->
+          <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
+            <h3>Links</h3>
+            <p>This is the links tab.</p>
+          </div>
+          <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
+            <h3>Media</h3>
+            <p>This is the media tab.</p>
+          </div>
+        </div>
+
+
+
+
+
+        <div>
+
         </div>
       </div>
+
     </div>
+
+
   </div>
+
   <div class="col-sm-4 right-sidebar">
 
     <div class="container ">
