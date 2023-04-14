@@ -58,6 +58,9 @@ def projectDetail(request, project_id):
     completed_tasks = alltasks.filter(status = 1)
     task = alltasks.filter(Q(status=0) | Q(status=3))
 
+    links = Link.objects.all().filter(project=project).order_by('-created')
+    media = Media.objects.all().filter(project=project).order_by('-created')
+
  
     for obj in expired_tasks:
         obj.theme = "dark"
@@ -104,11 +107,15 @@ def projectDetail(request, project_id):
         # subtask object identification 
         obj.subtasks = subtasks
     # task count 
-    total_task = Task.objects.all().filter(related_project = project_id).count()
-    task_completed = Task.objects.all().filter(related_project = project_id, status = 1).count()
-    task_remaining = Task.objects.all().filter(related_project = project_id, status = 0).count()
+    total_task = alltasks.count()
+    task_completed = completed_tasks.count()
+    task_remaining = task.count()
+    task_expired = expired_tasks.count()
     # declear forms 
     message_form = MessageForm(prefix = "msg")
+    link_Form = LinkForm(request.POST, prefix="link")
+    media_Form = MediaForm(request.POST, prefix="media")
+
     # post methodes of the page 
     if request.method == 'POST':
         # for messages 
@@ -120,7 +127,28 @@ def projectDetail(request, project_id):
                 message.sender = request.user
                 message.save()
             else:
-                messages.error(request, 'Message not sent!')
+                message.error(request, 'Message not sent!')
+
+        elif 'linkbtn' in request.POST:
+            link_form = LinkForm(request.POST, prefix="link")
+            if link_form.is_valid():
+                link = link_form.save(commit=False)
+                link.project = project
+                link.sender = request.user
+                link.save()
+            else:
+                print(link_form.errors)
+
+            # does not work 
+        elif 'mediabtn' in request.POST:
+            media_form = MediaForm(request.POST, prefix="media")
+            if media_form.is_valid():
+                media = media_form.save(commit=False)
+                media.project = project
+                media.sender = request.user
+                media.save()
+            else:
+                print(media_form.errors)
 
         # for subtasks
         if 'subtask_id' in request.POST and 'status' in request.POST:
@@ -139,10 +167,11 @@ def projectDetail(request, project_id):
             task.status = status
             task.save()
             return JsonResponse({'success': True})
+        
 
     # comment = Comment.objects.all().filter(project = project_id)
     # for obj in comment:
-    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks
+    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks, 'task_expired': task_expired, 'link_form':link_Form, 'links': links, 'media': media, 'media_form': media_Form
             }
     
     return render(request, 'taskManager/project.html', context)

@@ -34,9 +34,21 @@
     scroll-behavior: smooth;
   }
 
+  .link-list {
+    height: 70vh;
+    overflow-y: scroll;
+    scroll-behavior: smooth;
+  }
+
   .message-form {
     border-top: 1px solid #ddd;
     width: 100%;
+  }
+
+  .link-form {
+    border-top: 1px solid #ddd;
+    width: 100%;
+    bottom: -10 0px;
   }
 
   .message-form form {
@@ -157,16 +169,17 @@
             <ul class="nav nav-tabs" id="myTab" role="tablist">
 
               <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
-                  type="button" role="tab" aria-controls="messages" aria-selected="true">Ongoing</button>
+                <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#ongoing"
+                  type="button" role="tab" aria-controls="messages"
+                  aria-selected="true">Ongoing({{task_remaining}})</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links" type="button"
-                  role="tab" aria-controls="links" aria-selected="false">Completed</button>
+                <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button"
+                  role="tab" aria-controls="links" aria-selected="false">Completed({{task_completed}})</button>
               </li>
               <li class="nav-item" role="presentation">
-                <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#media" type="button"
-                  role="tab" aria-controls="media" aria-selected="false">Expired</button>
+                <button class="nav-link" id="media-tab" data-bs-toggle="tab" data-bs-target="#expired" type="button"
+                  role="tab" aria-controls="media" aria-selected="false">Expired({{task_expired}})</button>
               </li>
             </ul>
           </div>
@@ -189,7 +202,7 @@
 
         <div class="tab-content" id="myTabContent">
           <br>
-          <div class="tab-pane fade show active" id="messages" role="tabpanel" aria-labelledby="messages-tab">
+          <div class="tab-pane fade show active" id="ongoing" role="tabpanel" aria-labelledby="messages-tab">
             <!--  Messages  -->
 
 
@@ -198,12 +211,173 @@
               <div class="container">
                 <!-- variable forloop starter template  -->
                 <div id="task-loop">
-                {% for task in task %}
-                
+                  {% for task in task %}
+
+                  <!-- end of the template  -->
+
+                  <div class="card text-left shadow">
+                    <div class="card-header text-white bg-{{task.theme}}">
+                      <div class="row">
+                        <div class="col-sm-7">
+                          <div style="float: left;">
+                            <span>{{forloop.counter}}.</span>
+                          </div>
+                          <div style="float: left;">
+                            {{task.title | safe}}
+                          </div>
+
+                        </div>
+                        <div class="col-sm-2">
+
+                          <a style="color: #ffffff;" type="button" data-toggle="modal" data-target="#{{task.id}}">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          </a>
+                          <!--  modal -->
+                          <div class="modal fade text-dark" id="{{task.id}}" tabindex="-1" role="dialog"
+                            aria-labelledby="{{task.id}}Label">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title" id="{{task.id}}Label"><strong>Task:</strong> {{task.title |
+                                    safe}}
+                                  </h4>
+                                </div>
+                                <div class="modal-body">
+                                  <strong>Detail</strong> {{task.description | safe}}
+                                  <br>
+                                  <small class="text-muted">
+                                    <strong>Credit:</strong> {{task.credits}}
+                                    <br>
+                                    <strong>Created by: </strong> {{task.created_by}}
+                                    <br>
+                                    <strong>Created on: </strong> {{task.created}}
+                                    <br>
+                                    <strong>Deadline: </strong> {{task.deadline}}
+                                  </small>
+                                </div>
+
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end of modal -->
+
+                          &nbsp;
+                          <a style="color: #ffffff;" href="#">
+                            <i class="fa fa-comments" aria-hidden="true"></i>
+                          </a>
+                        </div>
+                        <div class="col-sm-2" id="taskcheck">
+                          <select class="form-control task-status" data-task-id="{{task.id}}">
+                            <option value="0" {% if task.status==0 %} selected {% endif %}>Not started</option>
+                            <option value="1" {% if task.status==1 %} selected {% endif %}>Completed</option>
+                            <option value="3" {% if task.status==3 %} selected {% endif %}>Ongoing</option>
+                          </select>
+                        </div>
+
+                      </div>
+                    </div>
+                    {% if task.subtasks %}
+                    <div class="card-body">
+                      {% for obj in task.subtasks %}
+                      <div class="row">
+                        <div class="col-sm-8">
+                          <p class="card-text">{{forloop.counter}}.{{obj}}</p>
+                        </div>
+                        <div class="col-sm-2 text-primary">
+                          <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                          </a>
+                          <!--  modal -->
+                          <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog"
+                            aria-labelledby="{{obj.title}}Label">
+                            <div class="modal-dialog" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj |
+                                    safe}}</h4>
+                                </div>
+                                <div class="modal-body">
+                                  <strong>Detail</strong> {{obj.description | safe}}
+                                  <br>
+                                  <small class="text-muted">
+                                    <strong>Credit:</strong> {{obj.credits}}
+                                    <br>
+                                    <strong>Created by: </strong> {{obj.created_by}}
+                                    <br>
+                                    <strong>Created on: </strong> {{obj.created}}
+                                    <br>
+                                    <strong>Deadline: </strong> {{obj.deadline}}
+                                  </small>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <!-- end of modal -->
+                          &nbsp;
+                          <a href="#">
+                            <i class="fa fa-comments" aria-hidden="true"></i>
+                          </a>
+                          &nbsp;
+                        </div>
+                        <div class="col-sm-2" id="subtaskcheck">
+                          <select class="form-control subtask-status" data-subtask-id="{{obj.id}}">
+                            <option value="0" {% if obj.status==0 %} selected {% endif %}>Not started</option>
+                            <option value="1" {% if obj.status==1 %} selected {% endif %}>Ongoing</option>
+                            <option value="2" {% if obj.status==2 %} selected {% endif %}>Done</option>
+                            <option value="3" {% if obj.status==3 %} selected {% endif %}>Error</option>
+                          </select>
+                        </div>
+                      </div>
+                      {% endfor %}
+                    </div>
+                    {% endif %}
+
+
+
+
+
+
+                    <div class="card-footer text-muted row">
+                      <div class="col-sm-6">
+                        <strong>Remaining: </strong>{{task.remaining_time}}
+                      </div>
+                      <div class="col-sm-6 text-right">
+                        <a class="btn btn-info btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
+                        <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify or
+                          remove</a>
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  {% empty %}
+                  Nothing to show
+                  <br>
+                  {% endfor %}
+
+                </div>
+              </div>
+            </div>
+            <!-- end of task list -->
+          </div>
+          <!-- end of messages  -->
+
+          <!-- completed tab  -->
+          <div class="tab-pane fade" id="completed" role="tabpanel" aria-labelledby="links-tab">
+            <div class="container">
+              <!-- variable forloop starter template  -->
+              <div id="task-loop">
+                {% for task in completed_tasks %}
+
                 <!-- end of the template  -->
 
                 <div class="card text-left shadow">
-                  <div class="card-header text-white bg-{{task.theme}}">
+                  <div class="card-header text-white bg-primary">
                     <div class="row">
                       <div class="col-sm-7">
                         <div style="float: left;">
@@ -258,387 +432,228 @@
                       </div>
                       <div class="col-sm-2" id="taskcheck">
                         <select class="form-control task-status" data-task-id="{{task.id}}">
-                            <option value="0" {% if task.status == 0 %} selected {% endif %}>Not started</option>
-                            <option value="1" {% if task.status == 1 %} selected {% endif %}>Completed</option>
-                            <option value="3" {% if task.status == 3 %} selected {% endif %}>Ongoing</option>
+                          <option value="0" {% if task.status==0 %} selected {% endif %}>Not started</option>
+                          <option value="1" {% if task.status==1 %} selected {% endif %}>Completed</option>
+                          <option value="3" {% if task.status==3 %} selected {% endif %}>Ongoing</option>
                         </select>
-                    </div>
-                    
+                      </div>
+
                     </div>
                   </div>
                   {% if task.subtasks %}
                   <div class="card-body">
-                      {% for obj in task.subtasks %}
-                          <div class="row">
-                              <div class="col-sm-8">
-                                  <p class="card-text">{{forloop.counter}}.{{obj}}</p>
+                    {% for obj in task.subtasks %}
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <p class="card-text">{{forloop.counter}}.{{obj}}</p>
+                      </div>
+                      <div class="col-sm-3 text-primary">
+                        <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        </a>
+                        <!--  modal -->
+                        <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog"
+                          aria-labelledby="{{obj.title}}Label">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}
+                                </h4>
                               </div>
-                              <div class="col-sm-2 text-primary">
-                                  <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
-                                      <i class="fa fa-info-circle" aria-hidden="true"></i>
-                                  </a>
-                                  <!--  modal -->
-                                  <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog" aria-labelledby="{{obj.title}}Label">
-                                      <div class="modal-dialog" role="document">
-                                          <div class="modal-content">
-                                              <div class="modal-header">
-                                                  <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}</h4>
-                                              </div>
-                                              <div class="modal-body">
-                                                  <strong>Detail</strong> {{obj.description | safe}}
-                                                  <br>
-                                                  <small class="text-muted">
-                                                      <strong>Credit:</strong> {{obj.credits}}
-                                                      <br>
-                                                      <strong>Created by: </strong> {{obj.created_by}}
-                                                      <br>
-                                                      <strong>Created on: </strong> {{obj.created}}
-                                                      <br>
-                                                      <strong>Deadline: </strong> {{obj.deadline}}
-                                                  </small>
-                                              </div>
-                                              <div class="modal-footer">
-                                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <!-- end of modal -->
-                                  &nbsp;
-                                  <a href="#">
-                                      <i class="fa fa-comments" aria-hidden="true"></i>
-                                  </a>
-                                  &nbsp;
+                              <div class="modal-body">
+                                <strong>Detail</strong> {{obj.description | safe}}
+                                <br>
+                                <small class="text-muted">
+                                  <strong>Credit:</strong> {{obj.credits}}
+                                  <br>
+                                  <strong>Created by: </strong> {{obj.created_by}}
+                                  <br>
+                                  <strong>Created on: </strong> {{obj.created}}
+                                  <br>
+                                  <strong>Deadline: </strong> {{obj.deadline}}
+                                </small>
                               </div>
-                              <div class="col-sm-2" id="subtaskcheck">
-                                  <select class="form-control subtask-status" data-subtask-id="{{obj.id}}">
-                                      <option value="0" {% if obj.status == 0 %} selected {% endif %}>Not started</option>
-                                      <option value="1" {% if obj.status == 1 %} selected {% endif %}>Ongoing</option>
-                                      <option value="2" {% if obj.status == 2 %} selected {% endif %}>Done</option>
-                                      <option value="3" {% if obj.status == 3 %} selected {% endif %}>Error</option>
-                                  </select>
-                              </div>
-                          </div>
-                      {% endfor %}
-                  </div>
-              {% endif %}
-              
-              
-              
-              
 
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- end of modal -->
+
+                        &nbsp;
+                        <a href="#">
+                          <i class="fa fa-comments" aria-hidden="true"></i>
+                        </a>
+                        &nbsp;
+
+
+                      </div>
+                      <div class="col-sm-1">
+                        Done
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </div>
+                  {% endif %}
 
                   <div class="card-footer text-muted row">
                     <div class="col-sm-6">
                       <strong>Remaining: </strong>{{task.remaining_time}}
                     </div>
                     <div class="col-sm-6 text-right">
-                      <a class="btn btn-info btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
-                      <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify or remove</a>
+                      <a class="btn btn-outline-warning btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
+                      <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify</a>
                     </div>
                   </div>
                 </div>
                 <br>
-                {%  empty %}
+
+                {% empty %}
                 Nothing to show
-                <br>
                 {% endfor %}
-                
-              </div>
               </div>
             </div>
-            <!-- end of task list -->
           </div>
-          <!-- end of messages  -->
-
-          <!-- completed tab  -->
-          <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
+          <!-- media tab  -->
+          <div class="tab-pane fade" id="expired" role="tabpanel" aria-labelledby="media-tab">
             <div class="container">
               <!-- variable forloop starter template  -->
               <div id="task-loop">
-              {% for task in completed_tasks %}
-              
-              <!-- end of the template  -->
+                {% for task in expired_tasks %}
 
-              <div class="card text-left shadow">
-                <div class="card-header text-white bg-primary">
-                  <div class="row">
-                    <div class="col-sm-7">
-                      <div style="float: left;">
-                        <span>{{forloop.counter}}.</span>
+                <!-- end of the template  -->
+
+                <div class="card text-left shadow">
+                  <div class="card-header text-white bg-{{task.theme}}">
+                    <div class="row">
+                      <div class="col-sm-7">
+                        <div style="float: left;">
+                          <span>{{forloop.counter}}.</span>
+                        </div>
+                        <div style="float: left;">
+                          {{task.title | safe}}
+                        </div>
+
                       </div>
-                      <div style="float: left;">
-                        {{task.title | safe}}
-                      </div>
+                      <div class="col-sm-3">
 
-                    </div>
-                    <div class="col-sm-2">
+                        <a style="color: #ffffff;" type="button" data-toggle="modal" data-target="#{{task.id}}">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        </a>
+                        <!--  modal -->
+                        <div class="modal fade text-dark" id="{{task.id}}" tabindex="-1" role="dialog"
+                          aria-labelledby="{{task.id}}Label">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="{{task.id}}Label"><strong>Task:</strong> {{task.title |
+                                  safe}}
+                                </h4>
+                              </div>
+                              <div class="modal-body">
+                                <strong>Detail</strong> {{task.description | safe}}
+                                <br>
+                                <small class="text-muted">
+                                  <strong>Credit:</strong> {{task.credits}}
+                                  <br>
+                                  <strong>Created by: </strong> {{task.created_by}}
+                                  <br>
+                                  <strong>Created on: </strong> {{task.created}}
+                                  <br>
+                                  <strong>Deadline: </strong> {{task.deadline}}
+                                </small>
+                              </div>
 
-                      <a style="color: #ffffff;" type="button" data-toggle="modal" data-target="#{{task.id}}">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                      </a>
-                      <!--  modal -->
-                      <div class="modal fade text-dark" id="{{task.id}}" tabindex="-1" role="dialog"
-                        aria-labelledby="{{task.id}}Label">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="{{task.id}}Label"><strong>Task:</strong> {{task.title |
-                                safe}}
-                              </h4>
-                            </div>
-                            <div class="modal-body">
-                              <strong>Detail</strong> {{task.description | safe}}
-                              <br>
-                              <small class="text-muted">
-                                <strong>Credit:</strong> {{task.credits}}
-                                <br>
-                                <strong>Created by: </strong> {{task.created_by}}
-                                <br>
-                                <strong>Created on: </strong> {{task.created}}
-                                <br>
-                                <strong>Deadline: </strong> {{task.deadline}}
-                              </small>
-                            </div>
-
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <!-- end of modal -->
+
+                        &nbsp;
+                        <a style="color: #ffffff;" href="#">
+                          <i class="fa fa-comments" aria-hidden="true"></i>
+                        </a>
                       </div>
-                      <!-- end of modal -->
-
-                      &nbsp;
-                      <a style="color: #ffffff;" href="#">
-                        <i class="fa fa-comments" aria-hidden="true"></i>
-                      </a>
+                      <div class="col-sm-1">
+                      </div>
                     </div>
-                    <div class="col-sm-2" id="taskcheck">
-                      <select class="form-control task-status" data-task-id="{{task.id}}">
-                          <option value="0" {% if task.status == 0 %} selected {% endif %}>Not started</option>
-                          <option value="1" {% if task.status == 1 %} selected {% endif %}>Completed</option>
-                          <option value="3" {% if task.status == 3 %} selected {% endif %}>Ongoing</option>
-                      </select>
                   </div>
-                  
-                  </div>
-                </div>
-                {% if task.subtasks %}
-                <div class="card-body">
-                  {% for obj in task.subtasks %}
-                  <div class="row">
-                    <div class="col-sm-8">
-                      <p class="card-text">{{forloop.counter}}.{{obj}}</p>
-                    </div>
-                    <div class="col-sm-3 text-primary">
-                      <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                      </a>
-                      <!--  modal -->
-                      <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog"
-                        aria-labelledby="{{obj.title}}Label">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}
-                              </h4>
-                            </div>
-                            <div class="modal-body">
-                              <strong>Detail</strong> {{obj.description | safe}}
-                              <br>
-                              <small class="text-muted">
-                                <strong>Credit:</strong> {{obj.credits}}
+                  {% if task.subtasks %}
+                  <div class="card-body">
+                    {% for obj in task.subtasks %}
+                    <div class="row">
+                      <div class="col-sm-8">
+                        <p class="card-text">{{forloop.counter}}.{{obj}}</p>
+                      </div>
+                      <div class="col-sm-3 text-primary">
+                        <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
+                          <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        </a>
+                        <!--  modal -->
+                        <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog"
+                          aria-labelledby="{{obj.title}}Label">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}
+                                </h4>
+                              </div>
+                              <div class="modal-body">
+                                <strong>Detail</strong> {{obj.description | safe}}
                                 <br>
-                                <strong>Created by: </strong> {{obj.created_by}}
-                                <br>
-                                <strong>Created on: </strong> {{obj.created}}
-                                <br>
-                                <strong>Deadline: </strong> {{obj.deadline}}
-                              </small>
-                            </div>
+                                <small class="text-muted">
+                                  <strong>Credit:</strong> {{obj.credits}}
+                                  <br>
+                                  <strong>Created by: </strong> {{obj.created_by}}
+                                  <br>
+                                  <strong>Created on: </strong> {{obj.created}}
+                                  <br>
+                                  <strong>Deadline: </strong> {{obj.deadline}}
+                                </small>
+                              </div>
 
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                              </div>
                             </div>
                           </div>
                         </div>
+                        <!-- end of modal -->
+
+                        &nbsp;
+                        <a href="#">
+                          <i class="fa fa-comments" aria-hidden="true"></i>
+                        </a>
+                        &nbsp;
+
+
                       </div>
-                      <!-- end of modal -->
-
-                      &nbsp;
-                      <a href="#">
-                        <i class="fa fa-comments" aria-hidden="true"></i>
-                      </a>
-                      &nbsp;
-
-
+                      <div class="col-sm-1">
+                      </div>
                     </div>
-                    <div class="col-sm-1">
-Done
-                    </div>
+                    {% endfor %}
                   </div>
-                  {% endfor %}
-                </div>
-                {% endif %}
+                  {% endif %}
 
-                <div class="card-footer text-muted row">
-                  <div class="col-sm-6">
-                    <strong>Remaining: </strong>{{task.remaining_time}}
-                  </div>
-                  <div class="col-sm-6 text-right">
-                    <a class="btn btn-outline-warning btn-sm" href="{% url 'add_subtask' task.id %}">Add Subtask</a>
-                    <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify</a>
+                  <div class="card-footer text-muted row">
+                    <div class="col-sm-6">
+                      <strong>Remaining: </strong>{{task.remaining_time}}
+                    </div>
+                    <div class="col-sm-6 text-right">
+                      <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify</a>
+                    </div>
                   </div>
                 </div>
+                <br>
+                {% empty %}
+                Nothing to show
+                {% endfor %}
               </div>
-              <br>
-              
-              {% empty %}
-              Nothing to show
-              {% endfor %}
-            </div>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-            <div class="container">
-              <!-- variable forloop starter template  -->
-              <div id="task-loop">
-              {% for task in expired_tasks %}
-              
-              <!-- end of the template  -->
-
-              <div class="card text-left shadow">
-                <div class="card-header text-white bg-{{task.theme}}">
-                  <div class="row">
-                    <div class="col-sm-7">
-                      <div style="float: left;">
-                        <span>{{forloop.counter}}.</span>
-                      </div>
-                      <div style="float: left;">
-                        {{task.title | safe}}
-                      </div>
-
-                    </div>
-                    <div class="col-sm-3">
-
-                      <a style="color: #ffffff;" type="button" data-toggle="modal" data-target="#{{task.id}}">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                      </a>
-                      <!--  modal -->
-                      <div class="modal fade text-dark" id="{{task.id}}" tabindex="-1" role="dialog"
-                        aria-labelledby="{{task.id}}Label">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="{{task.id}}Label"><strong>Task:</strong> {{task.title |
-                                safe}}
-                              </h4>
-                            </div>
-                            <div class="modal-body">
-                              <strong>Detail</strong> {{task.description | safe}}
-                              <br>
-                              <small class="text-muted">
-                                <strong>Credit:</strong> {{task.credits}}
-                                <br>
-                                <strong>Created by: </strong> {{task.created_by}}
-                                <br>
-                                <strong>Created on: </strong> {{task.created}}
-                                <br>
-                                <strong>Deadline: </strong> {{task.deadline}}
-                              </small>
-                            </div>
-
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- end of modal -->
-
-                      &nbsp;
-                      <a style="color: #ffffff;" href="#">
-                        <i class="fa fa-comments" aria-hidden="true"></i>
-                      </a>
-                    </div>
-                    <div class="col-sm-1">
-                      <input class="form-check-input" type="checkbox" name="" id="">
-                    </div>
-                  </div>
-                </div>
-                {% if task.subtasks %}
-                <div class="card-body">
-                  {% for obj in task.subtasks %}
-                  <div class="row">
-                    <div class="col-sm-8">
-                      <p class="card-text">{{forloop.counter}}.{{obj}}</p>
-                    </div>
-                    <div class="col-sm-3 text-primary">
-                      <a type="button" data-toggle="modal" data-target="#{{obj.title}}">
-                        <i class="fa fa-info-circle" aria-hidden="true"></i>
-                      </a>
-                      <!--  modal -->
-                      <div class="modal fade text-dark" id="{{obj.title}}" tabindex="-1" role="dialog"
-                        aria-labelledby="{{obj.title}}Label">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <h4 class="modal-title" id="{{obj.title}}Label"><strong>SubTask:</strong> {{obj | safe}}
-                              </h4>
-                            </div>
-                            <div class="modal-body">
-                              <strong>Detail</strong> {{obj.description | safe}}
-                              <br>
-                              <small class="text-muted">
-                                <strong>Credit:</strong> {{obj.credits}}
-                                <br>
-                                <strong>Created by: </strong> {{obj.created_by}}
-                                <br>
-                                <strong>Created on: </strong> {{obj.created}}
-                                <br>
-                                <strong>Deadline: </strong> {{obj.deadline}}
-                              </small>
-                            </div>
-
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <!-- end of modal -->
-
-                      &nbsp;
-                      <a href="#">
-                        <i class="fa fa-comments" aria-hidden="true"></i>
-                      </a>
-                      &nbsp;
-
-
-                    </div>
-                    <div class="col-sm-1">
-                      <input class="form-check-input border-primary" type="checkbox" name="" id="">
-                    </div>
-                  </div>
-                  {% endfor %}
-                </div>
-                {% endif %}
-
-                <div class="card-footer text-muted row">
-                  <div class="col-sm-6">
-                    <strong>Remaining: </strong>{{task.remaining_time}}
-                  </div>
-                  <div class="col-sm-6 text-right">
-                    <a class="btn btn-outline-dark btn-sm" href="{% url 'update_task' task.id %}">Modify</a>
-                  </div>
-                </div>
-              </div>
-              <br>
-              {% empty %}
-              Nothing to show
-              {% endfor %}
-            </div>
             </div>
           </div>
         </div>
@@ -663,7 +678,7 @@ Done
       <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item" role="presentation">
           <button class="nav-link active" id="messages-tab" data-bs-toggle="tab" data-bs-target="#messages"
-            type="button" role="tab" aria-controls="messages" aria-selected="true">Messages</button>
+            type="button" role="tab" aria-controls="messages" aria-selected="true">Discussion</button>
         </li>
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="links-tab" data-bs-toggle="tab" data-bs-target="#links" type="button" role="tab"
@@ -699,6 +714,8 @@ Done
                   <p>{{msg.body | safe}}</p>
                 </div>
               </div>
+              {% empty %}
+              Nothing to show
               {% endfor %}
             </div>
             <!-- messsage form  -->
@@ -715,126 +732,231 @@ Done
 
         <!-- link tab  -->
         <div class="tab-pane fade" id="links" role="tabpanel" aria-labelledby="links-tab">
-          <h3>Links</h3>
-          <p>This is the links tab.</p>
+          <div class="message-container">
+            <div class="link-list" id="small-screen-container">
+              <!-- link items will be added dynamically -->
+              {% for link in links %}
+              <div class="message">
+                <div class="message-header">
+                  <div class="sender-image">
+                    <img src="{{link.sender.profile.avatar.url}}" alt="Sender Image" width="20" height="20" />
+                  </div>
+                  <div class="sender-info">
+                    <div class="sender-name">
+                      <a href="{% url 'profile' link.sender.id %}">{{link.sender}}</a>
+                    </div>
+                    <div class="message-date">
+                      <small class="text-muted">{{link.created}}</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-body">
+                  <p>{{link.description}}</p>
+                  <p>{{link.link}}</p>
+                </div>
+              </div>
+              {% empty %}
+              Nothing to show
+              {% endfor %}
+            </div>
+            <!-- link form  -->
+            <div class="link-form">
+              <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-sm-8">
+
+                    <label for="id_link-description">Description:</label>
+                    <div class="django-ckeditor-widget" data-field-id="id_link-description"
+                      style="display: inline-block;">
+                      <input data-id="id_link-description" data-processed="0" type="text" id="id_link-description"
+                        name="link-description">
+                    </div>
+                    <br>
+
+                    <label for="id_link-link">Link:</label>
+                    <input id="id_link-link" maxlength="200" name="link-link" required="" type="url">
+
+                  </div>
+                  <div class="col-sm-4">
+                    <br>
+                    <button class="btn btn-primary" name="linkbtn" type="submit">Add Link</button>
+
+                  </div>
+                </div>
+
+              </form>
+
+
+            </div>
+          </div>
         </div>
         <div class="tab-pane fade" id="media" role="tabpanel" aria-labelledby="media-tab">
-          <h3>Media</h3>
-          <p>This is the media tab.</p>
+          <div class="message-container">
+            <div class="link-list" id="small-screen-container">
+              <!-- media items will be added dynamically -->
+              {% for media in media %}
+              <div class="message">
+                <div class="message-header">
+                  <div class="sender-image">
+                    <img src="{{media.sender.profile.avatar.url}}" alt="Sender Image" width="20" height="20" />
+                  </div>
+                  <div class="sender-info">
+                    <div class="sender-name">
+                      <a href="{% url 'profile' media.sender.id %}">{{media.sender}}</a>
+                    </div>
+                    <div class="message-date">
+                      <small class="text-muted">{{media.created}}</small>
+                    </div>
+                  </div>
+                </div>
+                <div class="message-body">
+                  <p>{{media.description}}</p>
+                  <p>{{media.media}}</p>
+                </div>
+              </div>
+              {% empty %}
+              Nothing to show
+              {% endfor %}
+            </div>
+            <!-- media form  -->
+            <div class="media-form">
+              <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                  <div class="col-sm-8">
+                    {{media_form.as_p}}
+                  </div>
+                  <div class="col-sm-4">
+                    <br>
+                    <button class="btn btn-primary" name="mediabtn" type="submit">Add Media</button>
+
+                  </div>
+                </div>
+
+              </form>
+
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Project detail</h1>
+        </div>
+        <div class="modal-body">
+          <dl>
+            <dt>Project Name: </dt>
+            <dd>{{project.name}}</dd>
+            <dt>Deadline: </dt>
+            <dd>{{project.deadline}}</dd>
+            <dt>Created on: </dt>
+            <dd>{{project.created}}</dd>
+            <dt>Representative: </dt>
+            <dd>{{project.representative}}</dd>
+            <dt>Tasks Remaining: </dt>
+            <dd>{{task_remaining}}</dd>
+            <dt>Tasks Completed: </dt>
+            <dd>{{task_completed}}</dd>
+            <dt>Total Tasks: </dt>
+            <dd>{{total_task}}</dd>
+            <dt>Members: </dt>
+            <dd>{{project.members}}</dd>
+            <dt>Project Description: </dt>
+            <dd>{{project.description}}</dd>
+
+          </dl>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Edit</button>
         </div>
       </div>
     </div>
-
   </div>
-</div>
+  <!-- end of Modal -->
 
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="exampleModalLabel">Project detail</h1>
-      </div>
-      <div class="modal-body">
-        <dl>
-          <dt>Project Name: </dt>
-          <dd>{{project.name}}</dd>
-          <dt>Deadline: </dt>
-          <dd>{{project.deadline}}</dd>
-          <dt>Created on: </dt>
-          <dd>{{project.created}}</dd>
-          <dt>Representative: </dt>
-          <dd>{{project.representative}}</dd>
-          <dt>Tasks Remaining: </dt>
-          <dd>{{task_remaining}}</dd>
-          <dt>Tasks Completed: </dt>
-          <dd>{{task_completed}}</dd>
-          <dt>Total Tasks: </dt>
-          <dd>{{total_task}}</dd>
-          <dt>Members: </dt>
-          <dd>{{project.members}}</dd>
-          <dt>Project Description: </dt>
-          <dd>{{project.description}}</dd>
+  <script>
+    // Get the small screen container element
+    const smallScreenContainer = document.getElementById("small-screen-container");
 
-        </dl>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary">Edit</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end of Modal -->
+    // Scroll to the bottom of the container after the page has finished loading
+    window.addEventListener("load", function () {
+      smallScreenContainer.scrollTop = smallScreenContainer.scrollHeight;
+    });
+  </script>
 
-
-<script>
-  // Get the small screen container element
-  const smallScreenContainer = document.getElementById("small-screen-container");
-
-  // Scroll to the bottom of the container after the page has finished loading
-  window.addEventListener("load", function () {
-    smallScreenContainer.scrollTop = smallScreenContainer.scrollHeight;
-  });
-</script>
-
-{% block ajax_js %}
-                  <script>
-                      $(document).ready(function() {
-                          $('.subtask-status').change(function() {
-                              var status = $(this).val();
-                              var subtask_id = $(this).data('subtask-id');
-                              var csrf_token = $("input[name='csrfmiddlewaretoken']").val();
-                              var url = "{% url 'projectDetail' project.id %}";
-                              $.ajax({
-                                  url: url,
-                                  type: "POST",
-                                  data: {
-                                      'subtask_id': subtask_id,
-                                      'status': status,
-                                      'csrfmiddlewaretoken': csrf_token
-                                  },
-                                  success: function(data) {
-                                      console.log(data);
-                                  },
-                                  error: function(xhr, status, error) {
-                                      console.error(xhr.responseText);
-                                  }
-                              });
-                          });
-                      });
-                      $(document).ready(function(){
-  // listen for changes to the task status dropdown
-  $(".task-status").change(function(){
-      var task_id = $(this).attr("data-task-id");
-      var status = $(this).val();
-      var url = "{% url 'projectDetail' project.id %}";
-      var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
-      // send AJAX request to update the task status
-      $.ajax({
+  {% block ajax_js %}
+  <script>
+    $(document).ready(function () {
+      $('.subtask-status').change(function () {
+        var status = $(this).val();
+        var subtask_id = $(this).data('subtask-id');
+        var csrf_token = $("input[name='csrfmiddlewaretoken']").val();
+        var url = "{% url 'projectDetail' project.id %}";
+        $.ajax({
+          url: url,
+          type: "POST",
+          data: {
+            'subtask_id': subtask_id,
+            'status': status,
+            'csrfmiddlewaretoken': csrf_token
+          },
+          success: function (data) {
+            console.log(data);
+          },
+          error: function (xhr, status, error) {
+            console.error(xhr.responseText);
+          }
+        });
+      });
+    });
+    // task status update 
+    $(document).ready(function () {
+      // listen for changes to the task status dropdown
+      $(".task-status").change(function () {
+        var task_id = $(this).attr("data-task-id");
+        var status = $(this).val();
+        var url = "{% url 'projectDetail' project.id %}";
+        var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+        // send AJAX request to update the task status
+        $.ajax({
           url: url,
           method: "POST",
-          data: {task_id: task_id, status: status, csrfmiddlewaretoken: csrf_token},
-          success: function(response){
-              console.log(response);
+          data: { task_id: task_id, status: status, csrfmiddlewaretoken: csrf_token },
+          success: function (response) {
+            console.log(response);
+            location.reload(); // refresh the page
           },
-          error: function(xhr, status, error){
-              console.error(xhr);
+          error: function (xhr, status, error) {
+            console.error(xhr);
           }
+        });
       });
-  });
-});
-
-                  </script>
-              {% endblock %}
-{% block javascript %}
-<!-- include your JS file here -->
-<script src="{% static 'taskManager/projectDetail.js' %}"></script>
-{% endblock %}
+    });
 
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
-  integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
-  integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
-{% endblock base %}
+  </script>
+  {% endblock %}
+  {% block javascript %}
+  <!-- include your JS file here -->
+  <script src="{% static 'taskManager/projectDetail.js' %}"></script>
+  {% endblock %}
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+    integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD"
+    crossorigin="anonymous"></script>
+  {% endblock base %}

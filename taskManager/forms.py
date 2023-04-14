@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Subtask, Message
+from .models import Task, Subtask, Message, Link, Media, Comment
 from ckeditor.fields import CKEditorWidget
 from django.forms import widgets
 
@@ -24,6 +24,15 @@ class MessageForm(forms.ModelForm):
         model = Message
         fields = ['body']
 
+class LinkForm(forms.ModelForm):
+    class Meta:
+        model = Link
+        fields = ['description', 'link']
+ 
+class MediaForm(forms.ModelForm):
+    class Meta:
+        model = Media
+        fields = ['description', 'media']
 
 class DeleteTaskForm(forms.Form):
     confirm_delete = forms.BooleanField(required=True)

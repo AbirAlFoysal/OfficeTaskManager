@@ -84,9 +84,8 @@ class Reply(models.Model):
     
 
 class Link(models.Model):
-    assigner = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
     description = RichTextField(default='No description provided', blank=True, null=True)
     link = models.URLField()
     serial = models.CharField(max_length=5, default='LS1')
@@ -97,9 +96,8 @@ class Link(models.Model):
 
 
 class Media(models.Model):
-    assigner = models.ForeignKey(User, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
     media = models.FileField(upload_to='media/')
     description = RichTextField(default='No description provided', blank=True, null=True)
     serial = models.CharField(max_length=5, default='MS1')
