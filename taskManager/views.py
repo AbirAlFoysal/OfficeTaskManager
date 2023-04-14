@@ -55,7 +55,7 @@ def projectDetail(request, project_id):
     project = Project.objects.get(id=project_id)
     alltasks = Task.objects.all().filter(related_project = project_id).order_by('deadline')
     expired_tasks = alltasks.filter(status = 2)
-    completed_tasks = alltasks.filter(status = 1)
+    completed_tasks = alltasks.filter(status = 1) 
     task = alltasks.filter(Q(status=0) | Q(status=3))
 
     links = Link.objects.all().filter(project=project).order_by('-created')
@@ -116,6 +116,13 @@ def projectDetail(request, project_id):
     link_Form = LinkForm(request.POST, prefix="link")
     media_Form = MediaForm(request.POST, prefix="media")
 
+    for obj in alltasks:
+        obj.comment = TaskComment.objects.filter(task = obj)
+        obj.subtask = Subtask.objects.filter(task = obj)
+    allsubtasks = Subtask.objects.all().filter(task__related_project = project_id)
+    for obj in allsubtasks:
+        obj.comment = SubtaskComment.objects.filter(subtask = obj)
+
     # post methodes of the page 
     if request.method == 'POST':
         # for messages 
@@ -167,11 +174,12 @@ def projectDetail(request, project_id):
             task.status = status
             task.save()
             return JsonResponse({'success': True})
+            
         
 
     # comment = Comment.objects.all().filter(project = project_id)
     # for obj in comment:
-    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks, 'task_expired': task_expired, 'link_form':link_Form, 'links': links, 'media': media, 'media_form': media_Form
+    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks, 'task_expired': task_expired, 'link_form':link_Form, 'links': links, 'media': media, 'media_form': media_Form, 'alltasks': alltasks, 'allsubtasks': allsubtasks
             }
     
     return render(request, 'taskManager/project.html', context)

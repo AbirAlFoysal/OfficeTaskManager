@@ -61,10 +61,19 @@ class Message(models.Model):
     def __str__(self):
         return self.body
 
-class Comment(models.Model):
+class TaskComment(models.Model):
     critic = models.ForeignKey(User, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    comment = RichTextField(blank=False, null=False)
+    created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.comment
+    
+class SubtaskComment(models.Model):
+    critic = models.ForeignKey(User, on_delete=models.CASCADE)
+    project = models.ForeignKey(Project, on_delete=models.CASCADE)
     subtask = models.ForeignKey(Subtask, on_delete=models.CASCADE)
     comment = RichTextField(blank=False, null=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -73,14 +82,14 @@ class Comment(models.Model):
         return self.comment
     
     
-class Reply(models.Model):
-    comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    critic = models.ForeignKey(User, on_delete=models.CASCADE)
-    reply = RichTextField(blank=False, null=False)
-    created = models.DateTimeField(auto_now_add=True)
+# class Reply(models.Model):
+#     comment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+#     critic = models.ForeignKey(User, on_delete=models.CASCADE)
+#     reply = RichTextField(blank=False, null=False)
+#     created = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.reply
+#     def __str__(self):
+#         return self.reply
     
 
 class Link(models.Model):

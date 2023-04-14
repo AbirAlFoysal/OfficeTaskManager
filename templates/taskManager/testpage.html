@@ -448,22 +448,18 @@ TEST-PAGE
   <!-- Offcanvas buttons -->
   <div class="d-flex justify-content-end mb-2">
     <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#linksCanvas">Links</button>
-    <button class="btn btn-outline-primary" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#mediaCanvas">Media</button>
+      data-bs-target="#task{{task.id}}">Task</button>
   </div>
 
   <!-- Links Offcanvas -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="linksCanvas" aria-labelledby="linksCanvasLabel">
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="task{{task.id}}" aria-labelledby="linksCanvasLabel">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="linksCanvasLabel">Links</h5>
+      <h5 class="offcanvas-title" id="linksCanvasLabel">task</h5>
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
       <ul>
-        <li><a href="#">Link 1</a></li>
-        <li><a href="#">Link 2</a></li>
-        <li><a href="#">Link 3</a></li>
+        task comments
       </ul>
     </div>
   </div>

@@ -1,5 +1,5 @@
 from django import forms
-from .models import Task, Subtask, Message, Link, Media, Comment
+from .models import Task, Subtask, Message, Link, Media, Project, SubtaskComment, TaskComment
 from ckeditor.fields import CKEditorWidget
 from django.forms import widgets
 
