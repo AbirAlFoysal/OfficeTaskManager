@@ -3,7 +3,9 @@ from django.contrib.auth.decorators import login_required
 from .models import *
 from datetime import datetime
 from django.utils import timezone
+from django.db.models import Q
 
+from django.http import JsonResponse
 
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -54,28 +56,17 @@ def projectDetail(request, project_id):
     alltasks = Task.objects.all().filter(related_project = project_id).order_by('deadline')
     expired_tasks = alltasks.filter(status = 2)
     completed_tasks = alltasks.filter(status = 1)
-    task = alltasks.filter(status = 0)
+    task = alltasks.filter(Q(status=0) | Q(status=3))
+
+ 
     for obj in expired_tasks:
-        deadline = obj.deadline
-        remaining_time = deadline - timezone.now()
-        remaining_days = remaining_time.days + 1
-        remaining_hour = remaining_time.seconds // 3600
-        remaining_minutes = (remaining_time.seconds % 3600) // 60
-        theme = "dark"
-        obj.theme = theme
-        obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
+        obj.theme = "dark"
+        obj.remaining_time = '0D:0H:0M'
         subtasks = Subtask.objects.filter(task = obj)
         obj.subtasks = subtasks
     
     for obj in completed_tasks:
-        deadline = obj.deadline
-        remaining_time = deadline - timezone.now()
-        remaining_days = remaining_time.days + 1
-        remaining_hour = remaining_time.seconds // 3600
-        remaining_minutes = (remaining_time.seconds % 3600) // 60
-        theme = "dark"
-        obj.theme = theme
-        obj.remaining_time = f'{remaining_days}D:{remaining_hour}H:{remaining_minutes}M'
+        obj.remaining_time = "Completed"
         subtasks = Subtask.objects.filter(task = obj)
         obj.subtasks = subtasks
         
@@ -120,25 +111,37 @@ def projectDetail(request, project_id):
     message_form = MessageForm(prefix = "msg")
     # post methodes of the page 
     if request.method == 'POST':
-        pass
         # for messages 
         if 'messagebtn' in request.POST:
-            msgForm = MessageForm(request.POST, prefix = "msg")
+            msgForm = MessageForm(request.POST, prefix="msg")
             if msgForm.is_valid():
                 message = msgForm.save(commit=False)
                 message.project = project
                 message.sender = request.user
                 message.save()
-                return redirect('projectDetail', project_id=project_id)
             else:
                 messages.error(request, 'Message not sent!')
-                msgForm = MessageForm()
-                return redirect('projectDetail', project_id=project_id)
-        return redirect('projectDetail', project_id=project_id)
-   
+
+        # for subtasks
+        if 'subtask_id' in request.POST and 'status' in request.POST:
+            subtask_id = request.POST['subtask_id']
+            status = request.POST['status']
+            subtask = Subtask.objects.get(pk=subtask_id)
+            subtask.status = status
+            subtask.save()
+            return JsonResponse({'success': True})
+        
+        # for task status
+        if 'task_id' in request.POST and 'status' in request.POST:
+            task_id = request.POST['task_id']
+            status = request.POST['status']
+            task = Task.objects.get(pk=task_id)
+            task.status = status
+            task.save()
+            return JsonResponse({'success': True})
+
     # comment = Comment.objects.all().filter(project = project_id)
     # for obj in comment:
-
     context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks
             }
     
@@ -165,8 +168,6 @@ def add_task(request, project_id):
 
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Project, Task, Subtask
 from .forms import SubtaskForm
 
 def add_subtask(request, task_id):

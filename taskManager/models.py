@@ -25,7 +25,7 @@ class Task(models.Model):
     related_project = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
     title = RichTextField(blank=False, null=False)
-    status = models.IntegerField(default=0) # 0:started, 1: completed, 2: expired 
+    status = models.IntegerField(default=0) # 0:not started, 1: completed, 2: expired, 3:ongoing
     completed = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     credits = models.IntegerField(default=0)
