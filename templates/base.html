@@ -135,11 +135,14 @@ integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6
                 {% endif %}
                 <hr>
                 <a class="dropdown-item" style="color:black" href="{% url 'projects' %}">All projects</a>
+                <hr>
+                    <a class="dropdown-item" href="{% url 'testpage' %}">TEST-PAGE</a>
                 </div>
             </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="{% url 'testpage' %}">TEST-PAGE</a>
-                  </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'chatlist' %}">Messages</a>
+            </li>
+                  
                   <li class="nav-item">
                     <a class="nav-link" href="{% url 'profile-list' %}">MEMBERS</a>
                   </li>

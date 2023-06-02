@@ -36,3 +36,15 @@ class MediaForm(forms.ModelForm):
 
 class DeleteTaskForm(forms.Form):
     confirm_delete = forms.BooleanField(required=True)
+
+
+
+class TaskCommentForm(forms.ModelForm):
+    class Meta:
+        model = TaskComment
+        fields = ['comment']
+
+class SubtaskCommentForm(forms.ModelForm):
+    class Meta:
+        model = SubtaskComment
+        fields = ['comment']

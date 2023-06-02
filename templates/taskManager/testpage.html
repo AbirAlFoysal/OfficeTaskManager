@@ -4,507 +4,170 @@ TEST-PAGE
 {% endblock title %}
 {% block base %}
 
-<div class="row">
-  <div class="col-sm-9">
-    <div class="row">
-      <div class="col-sm-7">
-        project name
-      </div>
-      <div class="col-sm-5">
-        some detail
-      </div>
-    </div>
-    <hr>
-    <div class="row">
-      <div class="col-sm-2">
-        side bar
-      </div>
-      <div class="col-sm-10">
-        <div>
-          add task fixed button
-        </div>
-        <div>
-          scrollable task list
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-sm-3">
-    messages
-  </div>
-</div>
-
-
-<!-- task framwork  -->
-<div id="framework">
-  <div id="task-loop">
-    original
-  </div>
-</div>
-
-<div id="target1"></div>
-<div id="target2"></div>
-<!-- js for copying task framework  -->
-<script>
-  window.onload = function() {
-  // Copy contents of framework to target1
-  var framework = document.getElementById("framework");
-  var target1 = document.getElementById("target1");
-  var target2 = document.getElementById("target2");
-
-  target1.innerHTML = framework.innerHTML;
-  
-  // Update task-loop content in target1
-  var taskLoop1 = document.getElementById("target1").querySelector("#task-loop");
-  taskLoop1.innerHTML = taskLoop1.innerHTML.replace(/original/g, "first copy");
-  
-  // Copy contents of framework to target2
-  target2.innerHTML = framework.innerHTML;
-  
-  // Update task-loop content in target2
-  var taskLoop2 = document.getElementById("target2").querySelector("#task-loop");
-  taskLoop2.innerHTML = taskLoop2.innerHTML.replace(/original/g, "2nd copy");
-};
-</script>
-
-
-
-
-
-
 
 
 
 
 <style>
-  /**
- * Oscuro: #283035
- * Azul: #03658c
- * Detalle: #c7cacb
- * Fondo: #dee1e3
- ----------------------------------*/
-  /**
- * Oscuro: #283035
- * Azul: #03658c
- * Detalle: #c7cacb
- * Fondo: #dee1e3
- ----------------------------------*/
-  * {
-    margin: 0;
-    padding: 0;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+  
+.card-big-shadow {
+    max-width: 320px;
+    position: relative;
+}
 
-  a {
-    color: #03658c;
-    text-decoration: none;
-  }
-
-  ul {
-    list-style-type: none;
-  }
-
-  body {
-    font-family: 'Roboto', Arial, Helvetica, Sans-serif, Verdana;
-    background: #dee1e3;
-  }
-
-  /** ====================
-* Lista de Comentarios
-=======================*/
-  .comments-container {
-    margin: 60px auto 15px;
-    width: 768px;
-  }
-
-  .comments-container h1 {
-    font-size: 36px;
-    color: #283035;
-    font-weight: 400;
-  }
-
-  .comments-container h1 a {
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  .comments-list {
+.coloured-cards .card {
     margin-top: 30px;
+}
+
+.card[data-radius="none"] {
+    border-radius: 0px;
+}
+.card {
+    border-radius: 8px;
+    box-shadow: 0 2px 2px rgba(204, 197, 185, 0.5);
+    background-color: #FFFFFF;
+    color: #252422;
+    margin-bottom: 20px;
     position: relative;
-  }
-
-  /**
-* Lineas / Detalles
------------------------*/
-  .comments-list:before {
-    content: '';
-    width: 2px;
-    height: 100%;
-    background: #c7cacb;
-    position: absolute;
-    left: 32px;
-    top: 0;
-  }
-
-  .comments-list:after {
-    content: '';
-    position: absolute;
-    background: #c7cacb;
-    bottom: 0;
-    left: 27px;
-    width: 7px;
-    height: 7px;
-    border: 3px solid #dee1e3;
-    -webkit-border-radius: 50%;
-    -moz-border-radius: 50%;
-    border-radius: 50%;
-  }
-
-  .reply-list:before,
-  .reply-list:after {
-    display: none;
-  }
-
-  .reply-list li:before {
-    content: '';
-    width: 60px;
-    height: 2px;
-    background: #c7cacb;
-    position: absolute;
-    top: 25px;
-    left: -55px;
-  }
+    z-index: 1;
+}
 
 
-  .comments-list li {
-    margin-bottom: 15px;
-    display: block;
-    position: relative;
-  }
+.card[data-background="image"] .title, .card[data-background="image"] .stats, .card[data-background="image"] .category, .card[data-background="image"] .description, .card[data-background="image"] .content, .card[data-background="image"] .card-footer, .card[data-background="image"] small, .card[data-background="image"] .content a, .card[data-background="color"] .title, .card[data-background="color"] .stats, .card[data-background="color"] .category, .card[data-background="color"] .description, .card[data-background="color"] .content, .card[data-background="color"] .card-footer, .card[data-background="color"] small, .card[data-background="color"] .content a {
+    color: #FFFFFF;
+}
+.card.card-just-text .content {
+    padding: 50px 65px;
+    text-align: center;
+}
+.card .content {
+    padding: 20px 20px 10px 20px;
+}
+.card[data-color="blue"] .category {
+    color: #7a9e9f;
+}
 
-  .comments-list li:after {
-    content: '';
-    display: block;
-    clear: both;
-    height: 0;
-    width: 0;
-  }
-
-  .reply-list {
-    padding-left: 88px;
-    clear: both;
-    margin-top: 15px;
-  }
-
-  /**
-* Avatar
----------------------------*/
-  .comments-list .comment-avatar {
-    width: 65px;
-    height: 65px;
-    position: relative;
-    z-index: 99;
-    float: left;
-    border: 3px solid #FFF;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-  }
-
-  .comments-list .comment-avatar img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .reply-list .comment-avatar {
-    width: 50px;
-    height: 50px;
-  }
-
-  .comment-main-level:after {
-    content: '';
-    width: 0;
-    height: 0;
-    display: block;
-    clear: both;
-  }
-
-  /**
-* Caja del Comentario
----------------------------*/
-  .comments-list .comment-box {
-    width: 680px;
-    float: right;
-    position: relative;
-    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.15);
-  }
-
-  .comments-list .comment-box:before,
-  .comments-list .comment-box:after {
-    content: '';
-    height: 0;
-    width: 0;
-    position: absolute;
-    display: block;
-    border-width: 10px 12px 10px 0;
-    border-style: solid;
-    border-color: transparent #FCFCFC;
-    top: 8px;
-    left: -11px;
-  }
-
-  .comments-list .comment-box:before {
-    border-width: 11px 13px 11px 0;
-    border-color: transparent rgba(0, 0, 0, 0.05);
-    left: -12px;
-  }
-
-  .reply-list .comment-box {
-    width: 610px;
-  }
-
-  .comment-box .comment-head {
-    background: #FCFCFC;
-    padding: 10px 12px;
-    border-bottom: 1px solid #E5E5E5;
-    overflow: hidden;
-    -webkit-border-radius: 4px 4px 0 0;
-    -moz-border-radius: 4px 4px 0 0;
-    border-radius: 4px 4px 0 0;
-  }
-
-  .comment-box .comment-head i {
-    float: right;
-    margin-left: 14px;
-    position: relative;
-    top: 2px;
-    color: #A6A6A6;
-    cursor: pointer;
-    -webkit-transition: color 0.3s ease;
-    -o-transition: color 0.3s ease;
-    transition: color 0.3s ease;
-  }
-
-  .comment-box .comment-head i:hover {
-    color: #03658c;
-  }
-
-  .comment-box .comment-name {
-    color: #283035;
+.card .category, .card .label {
     font-size: 14px;
-    font-weight: 700;
-    float: left;
-    margin-right: 10px;
-  }
+    margin-bottom: 0px;
+}
+.card-big-shadow:before {
+    background-image: url("http://static.tumblr.com/i21wc39/coTmrkw40/shadow.png");
+    background-position: center bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    bottom: -12%;
+    content: "";
+    display: block;
+    left: -12%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 0;
+}
+h4, .h4 {
+    font-size: 1.5em;
+    font-weight: 600;
+    line-height: 1.2em;
+}
+h6, .h6 {
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+.card .description {
+    font-size: 16px;
+    color: #66615b;
+}
+.content-card{
+    margin-top:30px;    
+}
+a:hover, a:focus {
+    text-decoration: none;
+}
 
-  .comment-box .comment-name a {
-    color: #283035;
-  }
+/*======== COLORS ===========*/
+.card[data-color="blue"] {
+    background: #b8d8d8;
+}
+.card[data-color="blue"] .description {
+    color: #506568;
+}
 
-  .comment-box .comment-head span {
-    float: left;
-    color: #999;
-    font-size: 13px;
-    position: relative;
-    top: 1px;
-  }
+.card[data-color="green"] {
+    background: #d5e5a3;
+}
+.card[data-color="green"] .description {
+    color: #60773d;
+}
+.card[data-color="green"] .category {
+    color: #92ac56;
+}
 
-  .comment-box .comment-content {
-    background: #FFF;
-    padding: 12px;
-    font-size: 15px;
-    color: #595959;
-    -webkit-border-radius: 0 0 4px 4px;
-    -moz-border-radius: 0 0 4px 4px;
-    border-radius: 0 0 4px 4px;
-  }
+.card[data-color="yellow"] {
+    background: #ffe28c;
+}
+.card[data-color="yellow"] .description {
+    color: #b25825;
+}
+.card[data-color="yellow"] .category {
+    color: #d88715;
+}
 
-  .comment-box .comment-name.by-author,
-  .comment-box .comment-name.by-author a {
-    color: #03658c;
-  }
+.card[data-color="brown"] {
+    background: #d6c1ab;
+}
+.card[data-color="brown"] .description {
+    color: #75442e;
+}
+.card[data-color="brown"] .category {
+    color: #a47e65;
+}
 
-  .comment-box .comment-name.by-author:after {
-    content: 'autor';
-    background: #03658c;
-    color: #FFF;
-    font-size: 12px;
-    padding: 3px 5px;
-    font-weight: 700;
-    margin-left: 10px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-  }
+.card[data-color="purple"] {
+    background: #baa9ba;
+}
+.card[data-color="purple"] .description {
+    color: #3a283d;
+}
+.card[data-color="purple"] .category {
+    color: #5a283d;
+}
 
-  /** =====================
-* Responsive
-========================*/
-  @media only screen and (max-width: 766px) {
-    .comments-container {
-      width: 480px;
-    }
-
-    .comments-list .comment-box {
-      width: 390px;
-    }
-
-    .reply-list .comment-box {
-      width: 320px;
-    }
-  }
+.card[data-color="orange"] {
+    background: #ff8f5e;
+}
+.card[data-color="orange"] .description {
+    color: #772510;
+}
+.card[data-color="orange"] .category {
+    color: #e95e37;
+}
 </style>
-<!-- Contenedor Principal -->
-<div class="comments-container">
-  <h1>Comentarios <a href="http://creaticode.com">creaticode.com</a></h1>
 
-  <ul id="comments-list" class="comments-list">
-    <li>
-      <div class="comment-main-level">
-        <!-- Avatar -->
-        <div class="comment-avatar"><img src="http://i9.photobucket.com/albums/a88/creaticode/avatar_1_zps8e1c80cd.jpg"
-            alt=""></div>
-        <!-- Contenedor del Comentario -->
-        <div class="comment-box">
-          <div class="comment-head">
-            <h6 class="comment-name by-author"><a href="http://creaticode.com/blog">Agustin Ortiz</a></h6>
-            <span>hace 20 minutos</span>
-            <i class="fa fa-reply"></i>
-            <i class="fa fa-heart"></i>
+
+<div class="container bootstrap snippets bootdeys">
+  <div class="row">
+      <div class="col-md-4 col-sm-6 content-card">
+          <div class="card-big-shadow">
+              <div class="card card-just-text" data-background="color" data-color="green" data-radius="none">
+                  <div class="content">
+                      <h6 class="category">Supervisor:</h6>
+                      <h4 class="title"><a href="#">Pproject title</a></h4>
+                      <p class="description">What all of these have in common is that they're pulling information out of the app or the service and making it relevant to the moment. </p>
+                  </div>
+                  <div class="d-flex align-items-center">
+                    <img src="avatar1.jpg" alt="Avatar 1" class="rounded-circle me-2" width="40" height="40">
+                    <img src="avatar2.jpg" alt="Avatar 2" class="rounded-circle me-2" width="40" height="40">
+                    <img src="avatar3.jpg" alt="Avatar 3" class="rounded-circle me-2" width="40" height="40">
+                    <!-- Add more avatar images as needed -->
+                  </div>
+                  
+              </div> <!-- end card -->
           </div>
-          <div class="comment-content">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit omnis animi et iure laudantium vitae,
-            praesentium optio, sapiente distinctio illo?
-          </div>
-        </div>
       </div>
-      <!-- Respuestas de los comentarios -->
-
-    </li>
-
-
-  </ul>
+    </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-<div class='container'>
-  <!-- index.html -->
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  <ul>
-    {% for task in task %}
-    <li>
-      <p>{{task}}</p>
-      <ul>
-        {% for subtask in task.subtasks %}
-        <li>
-          {{subtask}}
-        </li>{% endfor %}
-      </ul>
-    </li>
-    {% endfor %}
-  </ul>
-
-
-
-
-  <!-- Offcanvas buttons -->
-  <div class="d-flex justify-content-end mb-2">
-    <button class="btn btn-outline-primary me-2" type="button" data-bs-toggle="offcanvas"
-      data-bs-target="#task{{task.id}}">Task</button>
-  </div>
-
-  <!-- Links Offcanvas -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="task{{task.id}}" aria-labelledby="linksCanvasLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="linksCanvasLabel">task</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <ul>
-        task comments
-      </ul>
-    </div>
-  </div>
-
-  <!-- Media Offcanvas -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="mediaCanvas" aria-labelledby="mediaCanvasLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="mediaCanvasLabel">Media</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-      <ul>
-        <li><a href="#">Media 1</a></li>
-        <li><a href="#">Media 2</a></li>
-        <li><a href="#">Media 3</a></li>
-      </ul>
-    </div>
-  </div>
-
-  <script>
-    var linksBtn = document.querySelector("#linksCanvas button");
-    var mediaBtn = document.querySelector("#mediaCanvas button");
-
-    linksBtn.addEventListener("click", function (event) {
-      event.preventDefault();
-      var linksTab = document.querySelector("#links");
-      var mediaTab = document.querySelector("#media");
-      linksTab.classList.add("show", "active");
-      mediaTab.classList.remove("show", "active");
-    });
-
-    mediaBtn.addEventListener("click", function (event) {
-      event.preventDefault();
-      var linksTab = document.querySelector("#links");
-      var mediaTab = document.querySelector("#media");
-      mediaTab.classList.add("show", "active");
-      linksTab.classList.remove("show", "active");
-    });
-  </script>
-
-
-
-
-
-
 
 
 

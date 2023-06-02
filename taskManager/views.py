@@ -42,11 +42,11 @@ def testpage(request):
 
 
 def projectCollection(request):
-    ongoing_projects = Project.objects.all().filter(status = 0)
-    finished_projects = Project.objects.all().filter(status = 1)
-    return render(request, 'taskManager/projectCollection.html',{'ongoing_projects': ongoing_projects, 'finished_projects': finished_projects})
-
-
+    projects = Project.objects.all()
+    ongoing_projects = projects.filter(status = 0)
+    finished_projects = projects.filter(status = 1)
+    cancelled_projects = projects.filter(status = 2)
+    return render(request, 'taskManager/projectCollection.html',{'ongoing_projects': ongoing_projects, 'finished_projects': finished_projects, 'cancelled_projects': cancelled_projects})
 
 
 
@@ -60,19 +60,18 @@ def projectDetail(request, project_id):
 
     links = Link.objects.all().filter(project=project).order_by('-created')
     media = Media.objects.all().filter(project=project).order_by('-created')
-
  
     for obj in expired_tasks:
         obj.theme = "dark"
         obj.remaining_time = '0D:0H:0M'
         subtasks = Subtask.objects.filter(task = obj)
         obj.subtasks = subtasks
-    
+
     for obj in completed_tasks:
         obj.remaining_time = "Completed"
         subtasks = Subtask.objects.filter(task = obj)
         obj.subtasks = subtasks
-        
+
     for obj in task:
         deadline = obj.deadline
         # remaining time calculation for each task 
@@ -106,6 +105,14 @@ def projectDetail(request, project_id):
         subtasks = Subtask.objects.filter(task = obj)
         # subtask object identification 
         obj.subtasks = subtasks
+        obj.comment = TaskComment.objects.filter(task = obj)
+        # count comments on each task 
+        obj.task_comment_count = TaskComment.objects.filter(task=obj).count()
+        # # count subtasks on each task
+        # for subobj in obj: 
+        #     subobj.subtask_comment_count = SubtaskComment.objects.filter(subtask=subobj).count()
+
+    
     # task count 
     total_task = alltasks.count()
     task_completed = completed_tasks.count()
@@ -115,13 +122,15 @@ def projectDetail(request, project_id):
     message_form = MessageForm(prefix = "msg")
     link_Form = LinkForm(request.POST, prefix="link")
     media_Form = MediaForm(request.POST, prefix="media")
+    
 
-    for obj in alltasks:
-        obj.comment = TaskComment.objects.filter(task = obj)
-        obj.subtask = Subtask.objects.filter(task = obj)
+
+    for obj in alltasks: 
+        obj.comment = TaskComment.objects.filter(task = obj).order_by('-created')
+        obj.count = obj.comment.count()
     allsubtasks = Subtask.objects.all().filter(task__related_project = project_id)
-    for obj in allsubtasks:
-        obj.comment = SubtaskComment.objects.filter(subtask = obj)
+
+
 
     # post methodes of the page 
     if request.method == 'POST':
@@ -173,19 +182,27 @@ def projectDetail(request, project_id):
             task = Task.objects.get(pk=task_id)
             task.status = status
             task.save()
-            return JsonResponse({'success': True})
-            
-        
-
-    # comment = Comment.objects.all().filter(project = project_id)
-    # for obj in comment:
-    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks, 'task_expired': task_expired, 'link_form':link_Form, 'links': links, 'media': media, 'media_form': media_Form, 'alltasks': alltasks, 'allsubtasks': allsubtasks
+            return JsonResponse({'success': True})        
+    context = {'project': project,'task': task, 'task_completed': task_completed, 'task_remaining': task_remaining, 'total_task': total_task, 'msg': msg,'message_form': message_form, 'expired_tasks': expired_tasks, 'completed_tasks': completed_tasks, 'task_expired': task_expired, 'link_form':link_Form, 'links': links, 'media': media, 'media_form': media_Form, 'alltasks': alltasks, 'allsubtasks': allsubtasks,
             }
     
     return render(request, 'taskManager/project.html', context)
 
-
-
+def add_task_comment(request, task_id):
+    task = get_object_or_404(Task, id=task_id)
+    if request.method == 'POST':
+        form = TaskCommentForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.project = task.related_project
+            comment.task = task
+            comment.critic = request.user
+            comment.save()
+            return redirect('projectDetail', project_id=task.related_project.id)
+    else:
+        form = TaskCommentForm()
+        # following line needs fixes
+    return render(request, 'your_template.html', {'form': form})
 
 
 def add_task(request, project_id):

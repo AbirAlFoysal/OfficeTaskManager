@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # custom apps
     'taskManager',
     'users',
+    'chat',
 ]
 
 # AUTH_USER_MODEL = 'member.CustomUser'

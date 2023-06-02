@@ -4,134 +4,182 @@ My Projects
 {% endblock title %}
 {% block base %}
 
+
 <center>
-  <h1><strong>Project List</strong></h1>
+  <h3><strong>Project List</strong></h3>
 </center>
+<br><br>
 
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-  <div class="offcanvas-header">
+<ul class="nav nav-pills mb-3 d-flex justify-content-center" id="pills-tab" role="tablist">
+  <li class="nav-item" role="presentation">
+    <button class="nav-link active" id="pills-myprojects-tab" data-bs-toggle="pill" data-bs-target="#pills-myprojects"
+      type="button" role="tab" aria-controls="pills-myprojects" aria-selected="true">My Project ({{projects|length}})</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-ongoing-tab" data-bs-toggle="pill" data-bs-target="#pills-ongoing" type="button"
+      role="tab" aria-controls="pills-ongoing" aria-selected="false">Ongoing ({{ongoing_projects|length}})</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-completed-tab" data-bs-toggle="pill" data-bs-target="#pills-completed"
+      type="button" role="tab" aria-controls="pills-completed" aria-selected="false">Completed ({{completed_projects|length}})</button>
+  </li>
+  <li class="nav-item" role="presentation">
+    <button class="nav-link" id="pills-cancelled-tab" data-bs-toggle="pill" data-bs-target="#pills-cancelled"
+      type="button" role="tab" aria-controls="pills-cancelled" aria-selected="false">Cancelled ({{cancelledprojects|length}})</button>
+  </li>
+</ul>
+<hr class="w-75 mx-auto">
+
+
+
+<div class="tab-content" id="pills-tabContent">
+  <div class="tab-pane fade show active" id="pills-myprojects" role="tabpanel" aria-labelledby="pills-myprojects-tab"
+    tabindex="0"  style="padding: 20px;">
+    <div class="row">
+
+      {% for project in projects %}
+        <div class="card shadow col-lg-3 col-md-4 col-sm-4" style="margin: 10px; padding: 0;">
+          <div class="card-header">
+            <h3>
+              {{project.name}}
+            </h3>
+            <small class="text-muted">
+              <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
+              <br>
+           Members:
+            {% for member in project.members.all %}
+          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
+          {% endfor %} </small>
+            <br>
+            <small class="text-muted">
+              Created:{{project.created}}
+              <br>
+              Deadline:{{project.deadline}}
+            </small>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
+          </div>
+        </div>
+
+      {% empty %}
+      <center>No Records</center>
+      {% endfor %}
+    </div>
+
+
+
+
+
+
+
+
+
+
   </div>
-  <div class="offcanvas-body">
-    <!-- Offcanvas content -->
-    <div class="container">
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#links">Ongoing</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" data-toggle="tab" href="#media">Finished</a>
-        </li>
-      </ul>
+  <div class="tab-pane fade" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab" tabindex="0">
+<div class="row">
 
-      <div class="tab-content">
-        <div id="links" class="tab-pane fade show active">
-          <!-- tab for ongoing projects  -->
-          
-
-          <div class="py-5">
-            <div class="container">
-              <div class="row hidden-md-up">
-                {% for project in ongoing_projects %}
-                
-                <div class="p-2 shadow col-sm-5">
-                <div class="card">
-                  <div class="card-header">
-                    <h3>
-                    {{project.name}}
-                    </h3>
-                    <small class="text-muted">
-                      <b>Representative:{{project.representative}}</b>
-                    </small>
-                    <br>
-                    <small class="text-muted">
-                      Created:{{project.created}} 
-                      <br>
-                      Deadline:{{project.deadline}}
-                    </small>
-                  </div>
-                  <div class="card-body">
-                    
-                    <p class="card-text" style="max-height: 80px; overflow-y: scroll;">
-                      <strong>Description: </strong>
-                      {{project.description}}
-                    </p>
-                  </div>
-                  <div class="card-footer">
-                    <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
-                  </div>
-                </div>
-              </div>
-                
-              {% empty %}
-              <p>No Records</p>
-                {% endfor %}
-              </div><br>
-
-            </div>
+      {% for project in ongoing_projects %}
+        <div class="card shadow col-lg-3 col-md-4 col-sm-4" style="margin: 10px; padding: 0;">
+          <div class="card-header">
+            <h3>
+              {{project.name}}
+            </h3>
+            <small class="text-muted">
+              <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
+              <br>
+           Members:
+            {% for member in project.members.all %}
+          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
+          {% endfor %} </small>
+            <br>
+            <small class="text-muted">
+              Created:{{project.created}}
+              <br>
+              Deadline:{{project.deadline}}
+            </small>
           </div>
-
-          
-        </div>
-        <div id="media" class="tab-pane fade">
-
-          {% comment %} finished projects  {% endcomment %}
-
-          
-
-          <div class="py-5">
-            <div class="container">
-              <div class="row hidden-md-up">
-                {% for project in finished_projects %}
-                
-                <div class="p-2 shadow col-sm-5">
-                <div class="card">
-                  <div class="card-header">
-                    <h3>
-                    {{project.name}}
-                    </h3>
-                    <small class="text-muted">
-                      <b>Representative:{{project.representative}}</b>
-                    </small>
-                    <br>
-                    <small class="text-muted">
-                      Created:{{project.created}} 
-                      <br>
-                      Deadline:{{project.deadline}}
-                    </small>
-                  </div>
-                  <div class="card-body">
-                    
-                    <p class="card-text" style="max-height: 80px; overflow-y: scroll;">
-                      <strong>Description: </strong>
-                      {{project.description}}
-                    </p>
-                  </div>
-                  <div class="card-footer">
-                    <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
-                  </div>
-                </div>
-              </div>
-              {% empty %}
-              <p>No Records</p>
-                {% endfor %}
-              </div><br>
-
-            </div>
+          <div class="card-footer">
+            <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
           </div>
-
-          
         </div>
-      </div>
+
+      {% empty %}
+      <center>No Records</center>
+      {% endfor %}
     </div>
 
   </div>
+  <div class="tab-pane fade" id="pills-completed" role="tabpanel" aria-labelledby="pills-completed-tab" tabindex="0">
+    <div class="row">
+
+      {% for project in finished_projects %}
+        <div class="card shadow col-lg-3 col-md-4 col-sm-4" style="margin: 10px; padding: 0;">
+          <div class="card-header">
+            <h3>
+              {{project.name}}
+            </h3>
+            <small class="text-muted">
+              <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
+              <br>
+           Members:
+            {% for member in project.members.all %}
+          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
+          {% endfor %} </small>
+            <br>
+            <small class="text-muted">
+              Created:{{project.created}}
+              <br>
+              Deadline:{{project.deadline}}
+            </small>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
+          </div>
+        </div>
+
+      {% empty %}
+      <center>No Records</center>
+      {% endfor %}
+    </div>
+
+  </div>
+  <div class="tab-pane fade" id="pills-cancelled" role="tabpanel" aria-labelledby="pills-cancelled-tab" tabindex="0">
+    
+    <div class="row">
+
+      {% for project in cancelled_projects %}
+        <div class="card shadow col-lg-3 col-md-4 col-sm-4" style="margin: 10px; padding: 0;">
+          <div class="card-header">
+            <h3>
+              {{project.name}}
+            </h3>
+            <small class="text-muted">
+              <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
+              <br>
+           Members:
+            {% for member in project.members.all %}
+          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
+          {% endfor %} </small>
+            <br>
+            <small class="text-muted">
+              Created:{{project.created}}
+              <br>
+              Deadline:{{project.deadline}}
+            </small>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'projectDetail' project.id %}" class="btn btn-primary">View Project</a>
+          </div>
+        </div>
+
+      {% empty %}
+      <center>No Records</center>
+      {% endfor %}
+    </div>
+  </div>
 </div>
-
-
-
-
-
-
 
 
 {% endblock base %}

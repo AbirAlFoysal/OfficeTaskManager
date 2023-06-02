@@ -267,7 +267,7 @@
                           &nbsp;
                           <a style="color: #ffffff;" href="#">
                             <button type="button" data-bs-toggle="offcanvas" data-bs-target="#task{{task.id}}"><i
-                                class="fa fa-comments" aria-hidden="true"></i></button>
+                                class="fa fa-comments" aria-hidden="true"></i>({{task.task_comment_count}})</button>
                           </a>
                         </div>
                         <div class="col-sm-2" id="taskcheck">
@@ -320,18 +320,14 @@
                             </div>
                           </div>
                           <!-- end of modal -->
-                          &nbsp;
-                          <a href="#">
-                            <button type="button" data-bs-toggle="offcanvas" data-bs-target="#subtask{{obj.id}}"><i
-                                class="fa fa-comments" aria-hidden="true"></i></button>
-                          </a>
+                          
                           &nbsp;
                         </div>
                         <div class="col-sm-2" id="subtaskcheck">
                           <select class="form-control subtask-status" data-subtask-id="{{obj.id}}">
                             <option value="0" {% if obj.status == 0 %} selected {% endif %}>Not started</option>
                             <option value="1" {% if obj.status == 1 %} selected {% endif %}>Ongoing</option>
-                            <option value="2" {% if obj.status == 2 %} selected {% endif %}>Done</option>
+                            <option value="2" {% if obj.status == 2 %} selected {% endif %}> <span  style="color: green;">Done</span></option>
                             <option value="3" {% if obj.status == 3 %} selected {% endif %}>Error</option>
                           </select>
                         </div>
@@ -339,7 +335,7 @@
                       {% endfor %}
                     </div>
                     {% endif %}
-
+ 
 
 
 
@@ -896,7 +892,6 @@
 
 
 
-
   {% for task in alltasks %}
   <div class="offcanvas offcanvas-end" tabindex="-1" id="task{{task.id}}" aria-labelledby="linksCanvasLabel">
     <div class="offcanvas-header">
@@ -904,80 +899,48 @@
       <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-        {% if task.comment %}
-
-      {% for obj in task.comment %}
-      <div class="message">
-        <div class="message-header">
-          <div class="sender-image">
-            <img src="{{obj.critic.profile.avatar.url}}" alt="Sender Image" width="20" height="20" />
+       <!-- Comment form -->
+       <form method="post" action="{% url 'add_task_comment' task.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="comment">Comment:</label>
+          <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+        </div>
+        <button type="submit" name="taskcommentbtn" class="btn btn-primary">Submit</button>
+      </form>
+      <br>
+      {% if task.comment %}
+        {% for obj in task.comment %}
+        <div class="message">
+          <div class="message-header">
+            <div class="sender-image">
+              <img src="{{obj.critic.profile.avatar.url}}" alt="Sender Image" width="20" height="20" />
+            </div>
+            <div class="sender-info">
+              <div class="sender-name">
+                <a href="{% url 'profile' obj.critic.id %}">{{obj.critic}}</a>
+              </div>
+              <div class="message-date">
+                <small class="text-muted">{{obj.created}}</small>
+              </div>
+            </div>
           </div>
-          <div class="sender-info">
-            <div class="sender-name">
-              <a href="{% url 'profile' obj.critic.id %}">{{obj.critic}}</a>
-            </div>
-            <div class="message-date">
-              <small class="text-muted">{{obj.created}}</small>
-            </div>
+          <div class="message-body">
+            <p>{{obj.comment | safe}}</p>
           </div>
         </div>
-        <div class="message-body">
-          <p>{{obj.comment | safe}}</p>
-        </div>
-      </div>
-      {% empty %}
-      Nothing to show
-      {% endfor %}
-  {% endif %}
+        {% empty %}
+        Nothing to show
+        {% endfor %}
+      {% endif %}
 
+     
+      
     </div>
   </div>
-  {% endfor %}
-  <!-- task comment  side bar -->
-
-{% for subtask in allsubtasks  %}
-
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="subtask{{subtask.id}}" aria-labelledby="linksCanvasLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="linksCanvasLabel">Subtask Comments:</h5>
-      <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-
-      {% if subtask.comment %}
-
-      {% for obj in subtask.comment %}
-      <div class="message">
-        <div class="message-header">
-          <div class="sender-image">
-            <img src="{{obj.critic.profile.avatar.url}}" alt="Sender Image" width="20" height="20" />
-          </div>
-          <div class="sender-info">
-            <div class="sender-name">
-              <a href="{% url 'profile' obj.critic.id %}">{{obj.critic}}</a>
-            </div>
-            <div class="message-date">
-              <small class="text-muted">{{obj.created}}</small>
-            </div>
-          </div>
-        </div>
-        <div class="message-body">
-          <p>{{obj.comment | safe}}</p>
-        </div>
-      </div>
-      {% empty %}
-      Nothing to show
-      {% endfor %}
-  {% endif %}
-
-    </div>
-  </div>
-
-
 {% endfor %}
-  
 
-
+  <!-- task comment  side bar -->
 
 
 
