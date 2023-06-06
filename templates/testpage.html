@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block title %}
+TEST-PAGE
+{% endblock title %}
+{% block base %}
+
+
+
+
+
+  {% comment %} chat {% endcomment %}
+  <div class="container mt-5">
+    <h1>Chat Box Example</h1>
+    <p>Click the button to open the chat box:</p>
+    <button class="btn btn-primary" id="chat-btn">Chat</button>
+    <div id="chat-box" class="d-none">
+      <div class="card">
+        <div class="card-header">Chat</div>
+        <div class="card-body">
+          <ul class="list-unstyled" id="message-list">
+            <!-- Chat messages will be dynamically added here -->
+          </ul>
+          <form id="message-form">
+            <div class="form-group">
+              <input type="text" class="form-control" id="message-input" placeholder="Type your message...">
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+            <button type="button" class="btn btn-secondary float-right" id="close-chat-btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      var chatBox = $('#chat-box');
+      var chatBtn = $('#chat-btn');
+      var closeBtn = $('#close-chat-btn');
+      var messageList = $('#message-list');
+      var messageForm = $('#message-form');
+      var messageInput = $('#message-input');
+
+      chatBtn.click(function () {
+        chatBox.removeClass('d-none');
+      });
+
+      closeBtn.click(function () {
+        chatBox.addClass('d-none');
+      });
+
+      messageForm.submit(function (event) {
+        event.preventDefault();
+        var message = messageInput.val();
+        if (message) {
+          var li = $('<li>').text(message);
+          messageList.append(li);
+          messageInput.val('');
+        }
+      });
+    });
+  </script>
+  {% comment %} end chat {% endcomment %}
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+
+</div>
+{% endblock base %}

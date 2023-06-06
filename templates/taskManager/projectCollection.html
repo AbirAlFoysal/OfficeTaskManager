@@ -1,8 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
 My Projects
 {% endblock title %}
 {% block base %}
+
+<link rel="stylesheet" href="{% static 'avatarGroup.css' %}">
 
 
 <center>
@@ -47,9 +50,20 @@ My Projects
               <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
               <br>
            Members:
+           <br>
+           <span>
+
             {% for member in project.members.all %}
-          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
-          {% endfor %} </small>
+           <div class="avatar-group">
+            <a href="{% url 'profile' member.id %}" class="avatar-group-item avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="Gabriel H">
+                <img src="{{member.profile.avatar.url}}" alt="..." class="avatar-group-img rounded-circle" />
+            </a>
+          {% endfor %} 
+          <a href="#" class="avatar-group-item d-flex align-items-center justify-content-center bg-gray text-body avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="6 more members">
+            <b>T:{{project.members.count}}</b>
+        </a>  
+      </div></span>
+        </small>
             <br>
             <small class="text-muted">
               Created:{{project.created}}
@@ -67,18 +81,9 @@ My Projects
       {% endfor %}
     </div>
 
-
-
-
-
-
-
-
-
-
   </div>
   <div class="tab-pane fade" id="pills-ongoing" role="tabpanel" aria-labelledby="pills-ongoing-tab" tabindex="0">
-<div class="row">
+    <div class="row">
 
       {% for project in ongoing_projects %}
         <div class="card shadow col-lg-3 col-md-4 col-sm-4" style="margin: 10px; padding: 0;">
@@ -90,9 +95,20 @@ My Projects
               <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
               <br>
            Members:
+           <br>
+           <span>
+
             {% for member in project.members.all %}
-          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
-          {% endfor %} </small>
+           <div class="avatar-group">
+            <a href="{% url 'profile' member.id %}" class="avatar-group-item avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="Gabriel H">
+                <img src="{{member.profile.avatar.url}}" alt="..." class="avatar-group-img rounded-circle" />
+            </a>
+          {% endfor %} 
+          <a href="#" class="avatar-group-item d-flex align-items-center justify-content-center bg-gray text-body avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="6 more members">
+            <b>T:{{project.members.count}}</b>
+        </a>  
+      </div></span>
+        </small>
             <br>
             <small class="text-muted">
               Created:{{project.created}}
@@ -109,6 +125,7 @@ My Projects
       <center>No Records</center>
       {% endfor %}
     </div>
+
 
   </div>
   <div class="tab-pane fade" id="pills-completed" role="tabpanel" aria-labelledby="pills-completed-tab" tabindex="0">
@@ -124,9 +141,20 @@ My Projects
               <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
               <br>
            Members:
+           <br>
+           <span>
+
             {% for member in project.members.all %}
-          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
-          {% endfor %} </small>
+           <div class="avatar-group">
+            <a href="{% url 'profile' member.id %}" class="avatar-group-item avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="Gabriel H">
+                <img src="{{member.profile.avatar.url}}" alt="..." class="avatar-group-img rounded-circle" />
+            </a>
+          {% endfor %} 
+          <a href="#" class="avatar-group-item d-flex align-items-center justify-content-center bg-gray text-body avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="6 more members">
+            <b>T:{{project.members.count}}</b>
+        </a>  
+      </div></span>
+        </small>
             <br>
             <small class="text-muted">
               Created:{{project.created}}
@@ -144,9 +172,9 @@ My Projects
       {% endfor %}
     </div>
 
+
   </div>
   <div class="tab-pane fade" id="pills-cancelled" role="tabpanel" aria-labelledby="pills-cancelled-tab" tabindex="0">
-    
     <div class="row">
 
       {% for project in cancelled_projects %}
@@ -159,9 +187,20 @@ My Projects
               <b>Representative: <a href="{% url 'profile' project.representative.id %}"> {{project.representative}}</a></b>
               <br>
            Members:
+           <br>
+           <span>
+
             {% for member in project.members.all %}
-          <a href="{% url 'profile' member.id %}">{{ member.username }}</a>,
-          {% endfor %} </small>
+           <div class="avatar-group">
+            <a href="{% url 'profile' member.id %}" class="avatar-group-item avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="Gabriel H">
+                <img src="{{member.profile.avatar.url}}" alt="..." class="avatar-group-img rounded-circle" />
+            </a>
+          {% endfor %} 
+          <a href="#" class="avatar-group-item d-flex align-items-center justify-content-center bg-gray text-body avatar sm rounded-circle" data-tippy-placement="top" data-tippy-content="6 more members">
+            <b>T:{{project.members.count}}</b>
+        </a>  
+      </div></span>
+        </small>
             <br>
             <small class="text-muted">
               Created:{{project.created}}
@@ -178,6 +217,7 @@ My Projects
       <center>No Records</center>
       {% endfor %}
     </div>
+
   </div>
 </div>
 

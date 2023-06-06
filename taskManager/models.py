@@ -4,7 +4,7 @@ from ckeditor.fields import RichTextField
 # from django.conf import settings
 # User = settings.AUTH_USER_MODEL
 
-
+ 
 # Create your models here.
 
 class Project(models.Model):

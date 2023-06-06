@@ -38,7 +38,7 @@ def testpage(request):
     # render the template for the page
     
 
-    return render(request, 'taskManager/testpage.html',{'project': project, 'task': task})
+    return render(request, 'testpage.html',{'project': project, 'task': task})
 
 
 def projectCollection(request):

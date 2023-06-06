@@ -8,7 +8,6 @@ from users.forms import LoginForm
 
 
 urlpatterns = [
-#     path('', home, name='users-home'),
     path('', include('social_django.urls', namespace='social')),
     
     path('register/', register, name='register'),
